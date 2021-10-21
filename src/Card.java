@@ -1,11 +1,23 @@
 public class Card {
     private String color;
-    private String name;
     private int value;
+    private String name;
+    private int colorValue;
 
     public Card(String pColor, int pValue) {
         color = pColor;
         value = pValue;
+        if (pColor.equals("Rot")){
+            colorValue=0;
+        }else if (pColor.equals("Green")){
+            colorValue=1;
+        }else if (pColor.equals("Blue")){
+            colorValue=2;
+        }else if (pColor.equals("Yellow")){
+            colorValue=3;
+        }else if(pColor.equals("Black")){
+            colorValue=4;
+        }
         if (value <= 9) {
             name = color + " " + value;
         } else if (value == 10 && !color.equals("Black")) {
@@ -24,6 +36,9 @@ public class Card {
 
     public int getValue() {
         return value;
+    }
+    public int getColorValue(){
+        return colorValue;
     }
 
     public String getName() {

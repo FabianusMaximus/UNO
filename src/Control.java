@@ -42,5 +42,7 @@ public class Control {
         austeilen(anzSpieler);
         printHand(0);
         printHand(1);
+        spieler.get(1).sortieren();
+        printHand(1);
     }
 }
