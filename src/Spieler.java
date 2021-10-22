@@ -19,18 +19,31 @@ public class Spieler {
         return hand.get(pNr);
     }
 
-    public void sortieren() {
-        int n = hand.size();
-        Card temp = null;
-        for (int i = 0; i < n; i++) {
-            for (int j = 1; j < (n - i); j++) {
-                if (hand.get(j - 1).getValue() > hand.get(j).getValue()) {
-                    //swap elements
-                    temp = hand.get(j - 1);
-                    hand.remove(j-1);
-                    hand.add(j - 1, hand.get(j));
-                    hand.add(j, temp);
 
+    public void sortieren() {
+        Card temp;
+        boolean sorted = false;
+
+        while (!sorted) {
+            sorted = true;
+            for (int i = 0; i < hand.size() - 1; i++) {
+                if (hand.get(i).compareValueTo(hand.get(i + 1)) > 0) {
+                    temp = hand.get(i);
+                    hand.set(i, hand.get(i + 1));
+                    hand.set(i + 1, temp);
+                    sorted = false;
+                }
+            }
+        }
+        sorted = false;
+        while (!sorted) {
+            sorted = true;
+            for (int i = 0; i < hand.size() - 1; i++) {
+                if (hand.get(i).compareColorTo(hand.get(i + 1)) > 0) {
+                    temp = hand.get(i);
+                    hand.set(i, hand.get(i + 1));
+                    hand.set(i + 1, temp);
+                    sorted = false;
                 }
             }
         }
