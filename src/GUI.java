@@ -16,8 +16,8 @@ public class GUI {
 
     public void printHand(int spielerNr, ArrayList<Spieler> pSpieler) {
         System.out.println("--------Hand Spieler " + spielerNr + "--------");
-        for (int i = 0; i <pSpieler.get(spielerNr).getHand().size() ; i++) {
-            System.out.println(pSpieler.get(spielerNr).getHand().get(i).getName());
+        for (int i = 0; i < pSpieler.get(spielerNr).getHand().size(); i++) {
+            System.out.println((i + 1) + ": " + pSpieler.get(spielerNr).getHand().get(i).getName());
         }
     }
 }

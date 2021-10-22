@@ -4,6 +4,8 @@ public class Control {
     private Card card;
     private Deck deck;
     private GUI theGUI;
+    private Tabletop tabletop;
+    private UserInput userInput;
     private ArrayList<Spieler> spieler = new ArrayList<>();
 
     private int anzSpieler;
@@ -11,6 +13,7 @@ public class Control {
     public Control(){
         theGUI = new GUI(this);
         deck = new Deck(2);
+        tabletop = new Tabletop();
     }
 
     private void printDeck(){
@@ -35,7 +38,10 @@ public class Control {
     }
 
     public void start(){
-        anzSpieler = 2;
+        anzSpieler = new UserInput().inputNrPlayer();
+        /**
+         *
+         */
         printDeck();
         deck.shuffle();
         printDeck();

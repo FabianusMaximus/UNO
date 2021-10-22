@@ -22,9 +22,13 @@ public class Card {
             name = color + " " + value;
         } else if (value == 10 && !color.equals("Black")) {
             name = color + " " + "+2";
-        } else if (value == 10 && color.equals("Black")) {
+        } else if (value == 11 && !color.equals("Black")) {
+            name = color + " " + "umdrehen";
+        } else if (value == 12 && !color.equals("Black")) {
+            name = color + " " + "aussetzen";
+        } else if (value == 13 && color.equals("Black")) {
             name = "Farbwechselkarte";
-        } else if (value == 11 && color.equals("Black")) {
+        } else if (value == 14 && color.equals("Black")) {
             name = "Farbwechsel + 4";
         }
 

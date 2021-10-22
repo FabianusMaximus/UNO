@@ -5,15 +5,15 @@ public class Deck {
 
     public Deck(int pGroeße) {
         for (int j = pGroeße; j > 0; j--) {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 13; i++) {
                 deck.add(new Card("Blue", i));
                 deck.add(new Card("Green", i));
                 deck.add(new Card("Yellow", i));
                 deck.add(new Card("Red", i));
             }
             for (int i = 0; i < 4; i++) {
-                deck.add(new Card("Black", 10));
-                deck.add(new Card("Black", 11));
+                deck.add(new Card("Black", 13));
+                deck.add(new Card("Black", 14));
             }
         }
     }
