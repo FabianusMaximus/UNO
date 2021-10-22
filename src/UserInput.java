@@ -12,7 +12,7 @@ public class UserInput{
     }
 
     public int inputAnzKarten(){
-        System.out.println("Anzahl der Karten, die verwendet werden sollen:");
+        System.out.println("Anzahl der Kartensets, die verwendet werden sollen:");
         int anz = 0;
         scanner = new Scanner(System.in);
         anz = Integer.parseInt(scanner.nextLine());

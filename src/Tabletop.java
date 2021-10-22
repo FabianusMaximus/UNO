@@ -1,17 +1,16 @@
 import java.util.ArrayList;
 
 public class Tabletop {
-    private ArrayList<Card> cardsOnTable;
+    private Card cardsOnTable;
 
     public Tabletop(){
-
     }
 
     public void layCardOnTable(Card pCard){
-        cardsOnTable.add(pCard);
+        cardsOnTable= pCard;
     }
 
-    public ArrayList<Card> getCardsOnTable(){
+    public Card getCardOnTable(){
         return cardsOnTable;
     }
 }

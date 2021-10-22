@@ -20,4 +20,10 @@ public class GUI {
             System.out.println((i + 1) + ": " + pSpieler.get(spielerNr).getHand().get(i).getName());
         }
     }
+
+    public void printTabletop(Card pTabletop) {
+        System.out.println("-------Card on Table-------");
+            System.out.println(pTabletop.getName());
+
+    }
 }
