@@ -165,12 +165,12 @@ public class Control {
                     activePlayer = nextPlayer();
                 }
             } else {
-                System.out.println("bitte wähle eine der angegenen Karten");
+                System.out.println("bitte wähle eine der angegebenen Karten");
             }
 
 
         }
-        System.out.println("---------Spdieler " + activePlayer + " hat gewonnen---------");
+        System.out.println("---------Spieler " + activePlayer + " hat gewonnen---------");
 
     }
 
