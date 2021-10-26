@@ -8,18 +8,21 @@ public class Control {
     private Card card;
     private Deck deck;
     private GUI theGUI;
+    //private GUIGame theGameGUI;
+    //private GUIStart theStartGUI;
     private Tabletop tabletop;
     private ArrayList<Spieler> spieler = new ArrayList<>();
     private boolean richtung;
     private int activePlayer;
-
     private int anzSpieler;
 
     public Control() {
-        anzSpieler = new UserInput().inputNrPlayer();
         theGUI = new GUI(this);
-        deck = new Deck(new UserInput().inputAnzKarten());
+        //theStartGUI = new GUIStart(this);
         tabletop = new Tabletop();
+
+        anzSpieler = new UserInput().inputNrPlayer();
+        deck = new Deck(new UserInput().inputAnzKarten());
     }
 
     private void printDeck() {
@@ -134,14 +137,18 @@ public class Control {
         return activ;
     }
 
+    private void sotierenKarten(){
+        for (int i = 0; i < spieler.size(); i++) {
+            spieler.get(i).sortieren();
+        }
+    }
+
     private void gamecycle() {
         richtung = true;
 
         while (isGameActive()) {
             printCardsOnTable();
-            for (int i = 0; i < spieler.size(); i++) {
-                spieler.get(i).sortieren();
-            }
+            sotierenKarten();
             printHand(activePlayer);
             int auswahl = new UserInput().auswahlKarte();
             Card ausgwCard = null;
@@ -158,12 +165,12 @@ public class Control {
                     activePlayer = nextPlayer();
                 }
             } else {
-                System.out.println("wähle bitte eine Karte aus, die du auch besitzt");
+                System.out.println("bitte wähle eine der angegenen Karten");
             }
 
 
         }
-        System.out.println("---------Spdieler " + activePlayer + "hat gewonnen---------");
+        System.out.println("---------Spdieler " + activePlayer + " hat gewonnen---------");
 
     }
 

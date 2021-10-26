@@ -1,13 +1,16 @@
 import Kartenlogik.Card;
 import Kartenlogik.Spieler;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
-public class GUI {
+public class GUI  {
     private Control control;
 
     public GUI(Control pControl) {
         control = pControl;
+
     }
 
     public void printDeck(ArrayList<Card> pDeck) {
