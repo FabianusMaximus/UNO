@@ -1,3 +1,6 @@
+import Kartenlogik.Card;
+import Kartenlogik.Spieler;
+
 import java.util.ArrayList;
 
 public class GUI {
@@ -19,6 +22,7 @@ public class GUI {
         for (int i = 0; i < pSpieler.get(spielerNr).getHand().size(); i++) {
             System.out.println((i + 1) + ": " + pSpieler.get(spielerNr).getHand().get(i).getName());
         }
+        System.out.println("99: Karte aufnehmen");
     }
 
     public void printTabletop(Card pTabletop) {

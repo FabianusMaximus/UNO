@@ -1,16 +1,16 @@
-import java.util.ArrayList;
+import Kartenlogik.Card;
 
 public class Tabletop {
-    private Card cardsOnTable;
+    private Card cardOnTable;
 
     public Tabletop(){
     }
 
     public void layCardOnTable(Card pCard){
-        cardsOnTable= pCard;
+        cardOnTable= pCard;
     }
 
     public Card getCardOnTable(){
-        return cardsOnTable;
+        return cardOnTable;
     }
 }

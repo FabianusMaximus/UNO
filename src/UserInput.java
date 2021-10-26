@@ -26,4 +26,13 @@ public class UserInput{
         nr = Integer.parseInt(scanner.nextLine());
         return nr - 1;
     }
+
+    public String auswahlFarbe(){
+        System.out.println("Farbe auswählen:");
+        String farbe = "";
+        scanner = new Scanner(System.in);
+        farbe = scanner.nextLine();
+        return farbe;
+
+    }
 }

@@ -1,3 +1,5 @@
+package Kartenlogik;
+
 public class Card {
     private String color;
     private int value;
@@ -7,29 +9,31 @@ public class Card {
     public Card(String pColor, int pValue) {
         color = pColor;
         value = pValue;
-        if (pColor.equals("Rot")) {
+        if (pColor.equalsIgnoreCase("Rot")) {
             colorValue = 0;
-        } else if (pColor.equals("Green")) {
+        } else if (pColor.equalsIgnoreCase("Green")) {
             colorValue = 1;
-        } else if (pColor.equals("Blue")) {
+        } else if (pColor.equalsIgnoreCase("Blue")) {
             colorValue = 2;
-        } else if (pColor.equals("Yellow")) {
+        } else if (pColor.equalsIgnoreCase("Yellow")) {
             colorValue = 3;
-        } else if (pColor.equals("Black")) {
+        } else if (pColor.equalsIgnoreCase("Black")) {
             colorValue = 4;
         }
         if (value <= 9) {
             name = color + " " + value;
-        } else if (value == 10 && !color.equals("Black")) {
+        } else if (value == 10 && !color.equalsIgnoreCase("Black")) {
             name = color + " " + "+2";
-        } else if (value == 11 && !color.equals("Black")) {
+        } else if (value == 11 && !color.equalsIgnoreCase("Black")) {
             name = color + " " + "umdrehen";
-        } else if (value == 12 && !color.equals("Black")) {
+        } else if (value == 12 && !color.equalsIgnoreCase("Black")) {
             name = color + " " + "aussetzen";
-        } else if (value == 13 && color.equals("Black")) {
+        } else if (value == 13 && color.equalsIgnoreCase("Black")) {
             name = "Farbwechselkarte";
-        } else if (value == 14 && color.equals("Black")) {
+        } else if (value == 14 && color.equalsIgnoreCase("Black")) {
             name = "Farbwechsel + 4";
+        }else if(value == 69){
+            name = color;
         }
 
     }
