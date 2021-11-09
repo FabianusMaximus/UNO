@@ -30,7 +30,7 @@ public class Control {
     }
 
     private void printHand(int pSpieler) {
-        theGUI.printHand(pSpieler, spieler);
+        theGUI.printHand(spieler.get(activePlayer).getName(), pSpieler, spieler);
     }
 
     private void printCardsOnTable() {
@@ -106,9 +106,14 @@ public class Control {
                 aufnehmenKarte(nextPlayer());
                 break;
             case 11:
-                if (!richtung) richtung = true;
-                else richtung = false;
-                break;
+                if (anzSpieler == 2) {
+                    nextPlayer();
+                } else {
+                    if (!richtung) richtung = true;
+                    else richtung = false;
+                    break;
+                }
+
             case 12:
                 activePlayer = nextPlayer();
                 break;
@@ -137,7 +142,7 @@ public class Control {
         return activ;
     }
 
-    private void sotierenKarten(){
+    private void sotierenKarten() {
         for (int i = 0; i < spieler.size(); i++) {
             spieler.get(i).sortieren();
         }
@@ -150,22 +155,34 @@ public class Control {
             printCardsOnTable();
             sotierenKarten();
             printHand(activePlayer);
-            int auswahl = new UserInput().auswahlKarte();
             Card ausgwCard = null;
-            if (auswahl == 98) {
-                aufnehmenKarte(activePlayer);
-                activePlayer = nextPlayer();
-            } else if (auswahl < spieler.get(activePlayer).getHand().size()) {
-                ausgwCard = spieler.get(activePlayer).getHand().get(auswahl);
-                if (überpruefenCarte(ausgwCard)) {
-                    layDownCard(ausgwCard, activePlayer);
-                    if (isActionCard(ausgwCard)) {
-                        performAction(ausgwCard);
-                    }
+            if (spieler.get(activePlayer).getHand().size() == 1 && !spieler.get(activePlayer).hatUnoGesagt()) {
+                spieler.get(activePlayer).setUno( new UserInput().eingabeUno());
+                if (!spieler.get(activePlayer).hatUnoGesagt()) {
+                    System.out.println("du hast vergessen uno zu sagen. Strafe: +4 Karten");
+                    aufnehmenKarte(activePlayer);
+                    aufnehmenKarte(activePlayer);
+                    aufnehmenKarte(activePlayer);
+                    aufnehmenKarte(activePlayer);
                     activePlayer = nextPlayer();
                 }
             } else {
-                System.out.println("bitte wähle eine der angegebenen Karten");
+                int auswahl = new UserInput().auswahlKarte();
+                if (auswahl == 98) {
+                    aufnehmenKarte(activePlayer);
+                    activePlayer = nextPlayer();
+                } else if (auswahl < spieler.get(activePlayer).getHand().size()) {
+                    ausgwCard = spieler.get(activePlayer).getHand().get(auswahl);
+                    if (überpruefenCarte(ausgwCard)) {
+                        layDownCard(ausgwCard, activePlayer);
+                        if (isActionCard(ausgwCard)) {
+                            performAction(ausgwCard);
+                        }
+                        activePlayer = nextPlayer();
+                    }
+                } else {
+                    System.out.println("bitte wähle eine der angegebenen Karten");
+                }
             }
 
 
@@ -175,10 +192,11 @@ public class Control {
     }
 
     private void austeilen(int pAnzSpieler) {
-        for (int i = 0; i < pAnzSpieler; i++) {
-            spieler.add(new Spieler());
+        spieler.add(new Spieler(new UserInput().auswahlName()));
+        for (int i = 1; i < pAnzSpieler; i++) {
+            spieler.add(new Spieler(i));
         }
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 3; i++) {
             for (int j = 0; j < pAnzSpieler; j++) {
                 spieler.get(j).addCardToHand(deck.getDeck().get(i + j));
                 deck.getDeck().remove(i + j);

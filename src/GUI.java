@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class GUI  {
+public class GUI {
     private Control control;
 
     public GUI(Control pControl) {
@@ -20,8 +20,8 @@ public class GUI  {
         }
     }
 
-    public void printHand(int spielerNr, ArrayList<Spieler> pSpieler) {
-        System.out.println("--------Hand Spieler " + spielerNr + "--------");
+    public void printHand(String pName, int spielerNr, ArrayList<Spieler> pSpieler) {
+        System.out.println("--------" + pName + " --------");
         for (int i = 0; i < pSpieler.get(spielerNr).getHand().size(); i++) {
             System.out.println((i + 1) + ": " + pSpieler.get(spielerNr).getHand().get(i).getName());
         }
@@ -30,7 +30,7 @@ public class GUI  {
 
     public void printTabletop(Card pTabletop) {
         System.out.println("-------Card on Table-------");
-            System.out.println(pTabletop.getName());
+        System.out.println(pTabletop.getName());
 
     }
 }

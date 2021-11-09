@@ -28,6 +28,7 @@ public class UserInput {
         return eing;
     }
 
+
     public int auswahlKarte() {
         System.out.println("Karte auswählen die gelegt werden soll");
         return verarbeitenEingabe() - 1;
@@ -49,6 +50,24 @@ public class UserInput {
         }
 
         return farbe;
+
+    }
+
+    public String auswahlName(){
+        System.out.println("Name auswählen");
+        String name = "";
+        scanner = new Scanner(System.in);
+        name = scanner.nextLine();
+        return name;
+    }
+
+    public boolean eingabeUno(){
+        scanner = new Scanner(System.in);
+        if (scanner.nextLine().equalsIgnoreCase("uno")){
+            return true;
+        }else{
+            return false;
+        }
 
     }
 }

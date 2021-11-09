@@ -1,11 +1,20 @@
 package Kartenlogik;
+
 import java.util.ArrayList;
 
 public class Spieler {
+    private String name;
     private ArrayList<Card> hand = new ArrayList<>();
+    private  int nr;
+    private boolean uno = false;
 
-    public Spieler() {
+    public Spieler(int pNr) {
+        name = "Bot " + nr;
+        nr = pNr;
+    }
 
+    public Spieler(String pName) {
+        name = pName;
     }
 
     public ArrayList<Card> getHand() {
@@ -18,6 +27,18 @@ public class Spieler {
 
     public Card selectCard(int pNr) {
         return hand.get(pNr);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setUno(boolean pUno){
+        uno = pUno;
+    }
+
+    public boolean hatUnoGesagt(){
+        return uno;
     }
 
 
