@@ -5,7 +5,6 @@ import Kartenlogik.Spieler;
 import java.util.ArrayList;
 
 public class Control {
-    private Card card;
     private Deck deck;
     private GUI theGUI;
     //private GUIGame theGameGUI;
@@ -16,8 +15,8 @@ public class Control {
     private boolean richtung;
     private int activePlayer;
     private int anzSpieler;
-    Card ausgwCard = null;
-    String gewinner;
+    private Card ausgwCard = null;
+    private String gewinner;
 
     public Control() {
         theGUI = new GUI(this);
@@ -106,9 +105,9 @@ public class Control {
 
     private void farbwechsel(Card pCard) {
         if (activePlayer == 0) {
-            layDownCard(new Card(pCard.getName() + " : " + new UserInput().auswahlFarbe(), 69), 0);
+            layDownCard(new Card(new UserInput().auswahlFarbe(), 69), 0);
         } else {
-            layDownCard(new Card(pCard.getName() + " : " + bot.get(activePlayer - 1).auswaehlenFarbe(),
+            layDownCard(new Card(bot.get(activePlayer - 1).auswaehlenFarbe(),
                     69), 0);
         }
 
@@ -210,7 +209,7 @@ public class Control {
                 }
             } else {
                 bot.get(activePlayer - 1).reaction();
-                if (ausgwCard != null) {
+                if (bot.get(activePlayer-1).kannSpielen()) {
                     layDownCard(ausgwCard, activePlayer);
                     if (isActionCard(ausgwCard)) {
                         performAction(ausgwCard);
@@ -230,9 +229,10 @@ public class Control {
 
     private void austeilen(int pAnzSpieler) {
         spieler.add(new Spieler(new UserInput().auswahlName()));
+        int difficulty = new UserInput().auswahlDifficulty();
         for (int i = 1; i < pAnzSpieler; i++) {
             spieler.add(new Spieler(i));
-            bot.add(new Bot(spieler.get(i).getName(), spieler.get(i), this));
+            bot.add(new Bot(spieler.get(i).getName(), spieler.get(i), this,difficulty));
         }
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < pAnzSpieler; j++) {
@@ -252,5 +252,8 @@ public class Control {
         austeilen(anzSpieler);
         gamecycle();
 
+
+
     }
+
 }

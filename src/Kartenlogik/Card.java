@@ -25,13 +25,13 @@ public class Card {
         } else if (value == 10 && !color.equalsIgnoreCase("Black")) {
             name = color + " " + "+2";
         } else if (value == 11 && !color.equalsIgnoreCase("Black")) {
-            name = color + " " + "umdrehen";
+            name = color + " " + "reverse";
         } else if (value == 12 && !color.equalsIgnoreCase("Black")) {
-            name = color + " " + "aussetzen";
+            name = color + " " + "block";
         } else if (value == 13 && color.equalsIgnoreCase("Black")) {
-            name = "Farbwechselkarte";
+            name = "color swap";
         } else if (value == 14 && color.equalsIgnoreCase("Black")) {
-            name = "Farbwechsel + 4";
+            name = "color swap + 4";
         }else if(value == 69){
             name = color;
         }

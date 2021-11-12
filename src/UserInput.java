@@ -70,4 +70,9 @@ public class UserInput {
         }
 
     }
+
+    public int auswahlDifficulty(){
+        System.out.println("Wähle aus wie schwer die Bots sein sollen (1-3)");
+        return verarbeitenEingabe()-1;
+    }
 }
