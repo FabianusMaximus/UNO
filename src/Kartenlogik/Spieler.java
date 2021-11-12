@@ -5,12 +5,12 @@ import java.util.ArrayList;
 public class Spieler {
     private String name;
     private ArrayList<Card> hand = new ArrayList<>();
-    private  int nr;
+    private int nr;
     private boolean uno = false;
 
     public Spieler(int pNr) {
-        name = "Bot " + nr;
         nr = pNr;
+        name = "Bot " + nr;
     }
 
     public Spieler(String pName) {
@@ -33,18 +33,17 @@ public class Spieler {
         return name;
     }
 
-    public int getNr(){
+    public int getNr() {
         return nr;
     }
 
-    public void setUno(boolean pUno){
+    public void setUno(boolean pUno) {
         uno = pUno;
     }
 
-    public boolean hatUnoGesagt(){
+    public boolean hatUnoGesagt() {
         return uno;
     }
-
 
     public void sortieren() {
         Card temp;
@@ -76,4 +75,7 @@ public class Spieler {
 
     }
 
+    public int getNrOfCards() {
+        return hand.size();
+    }
 }

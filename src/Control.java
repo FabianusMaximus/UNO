@@ -17,6 +17,7 @@ public class Control {
     private int activePlayer;
     private int anzSpieler;
     Card ausgwCard = null;
+    String gewinner;
 
     public Control() {
         theGUI = new GUI(this);
@@ -38,6 +39,10 @@ public class Control {
 
     private void printCardsOnTable() {
         theGUI.printTabletop(tabletop.getCardOnTable());
+    }
+
+    private void printCardsOtherPlayers() {
+        theGUI.printCardsOtherPlayers(spieler);
     }
 
     public void layDownCard(Card pCard, int pSpieler) {
@@ -99,16 +104,17 @@ public class Control {
         return i;
     }
 
-    private void farbwechsel() {
-        if (activePlayer == 0){
-            layDownCard(new Card(new UserInput().auswahlFarbe(), 69), 0);
-        }else{
-            layDownCard(new Card (bot.get(activePlayer-1).auswaehlenFarbe(),69),0);
+    private void farbwechsel(Card pCard) {
+        if (activePlayer == 0) {
+            layDownCard(new Card(pCard.getName() + " : " + new UserInput().auswahlFarbe(), 69), 0);
+        } else {
+            layDownCard(new Card(pCard.getName() + " : " + bot.get(activePlayer - 1).auswaehlenFarbe(),
+                    69), 0);
         }
 
     }
 
-    private void ueberpruefenUno(){
+    private void ueberpruefenUno() {
         spieler.get(activePlayer).setUno(new UserInput().eingabeUno());
         if (!spieler.get(activePlayer).hatUnoGesagt()) {
             System.out.println("du hast vergessen uno zu sagen. Strafe: +4 Karten");
@@ -141,11 +147,11 @@ public class Control {
                 activePlayer = nextPlayer();
                 break;
             case 13:
-                farbwechsel();
+                farbwechsel(pCard);
 
                 break;
             case 14:
-                farbwechsel();
+                farbwechsel(pCard);
                 aufnehmenKarte(nextPlayer());
                 aufnehmenKarte(nextPlayer());
                 aufnehmenKarte(nextPlayer());
@@ -159,6 +165,7 @@ public class Control {
         for (int i = 0; i < spieler.size(); i++) {
             if (spieler.get(i).getHand().isEmpty()) {
                 activ = false;
+                gewinner = spieler.get(i).getName();
                 break;
             }
         }
@@ -178,6 +185,7 @@ public class Control {
             printCardsOnTable();
             sotierenKarten();
             if (activePlayer == 0) {
+                printCardsOtherPlayers();
                 printHand(activePlayer);
 
                 if (spieler.get(activePlayer).getHand().size() == 1 && !spieler.get(activePlayer).hatUnoGesagt()) {
@@ -202,12 +210,12 @@ public class Control {
                 }
             } else {
                 bot.get(activePlayer - 1).reaction();
-                if (ausgwCard != null){
-                    layDownCard(ausgwCard,activePlayer);
-                    if (isActionCard(ausgwCard)){
+                if (ausgwCard != null) {
+                    layDownCard(ausgwCard, activePlayer);
+                    if (isActionCard(ausgwCard)) {
                         performAction(ausgwCard);
                     }
-                }else{
+                } else {
                     aufnehmenKarte(activePlayer);
                 }
 
@@ -216,7 +224,7 @@ public class Control {
 
 
         }
-        System.out.println("---------Spieler " + activePlayer + " hat gewonnen---------");
+        System.out.println("---------Spieler " + gewinner + " hat gewonnen---------");
 
     }
 
@@ -235,7 +243,7 @@ public class Control {
         layDownCard(deck.getDeck().get(0), 0);
     }
 
-    public void setAusgwCard(Card pCard){
+    public void setAusgwCard(Card pCard) {
         ausgwCard = pCard;
     }
 

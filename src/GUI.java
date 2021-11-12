@@ -33,4 +33,11 @@ public class GUI {
         System.out.println(pTabletop.getName());
 
     }
+
+    public void printCardsOtherPlayers(ArrayList<Spieler> pSpieler) {
+        System.out.println("-------Cards other Players-------");
+        for (int i = 1; i < pSpieler.size(); i++) {
+            System.out.println(pSpieler.get(i).getName() + ": " + pSpieler.get(i).getNrOfCards());
+        }
+    }
 }
