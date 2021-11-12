@@ -11,10 +11,12 @@ public class Control {
     //private GUIGame theGameGUI;
     //private GUIStart theStartGUI;
     private Tabletop tabletop;
+    private ArrayList<Bot> bot = new ArrayList<>();
     private ArrayList<Spieler> spieler = new ArrayList<>();
     private boolean richtung;
     private int activePlayer;
     private int anzSpieler;
+    Card ausgwCard = null;
 
     public Control() {
         theGUI = new GUI(this);
@@ -23,6 +25,7 @@ public class Control {
 
         anzSpieler = new UserInput().inputNrPlayer();
         deck = new Deck(new UserInput().inputAnzKarten());
+
     }
 
     private void printDeck() {
@@ -37,7 +40,7 @@ public class Control {
         theGUI.printTabletop(tabletop.getCardOnTable());
     }
 
-    private void layDownCard(Card pCard, int pSpieler) {
+    public void layDownCard(Card pCard, int pSpieler) {
         tabletop.layCardOnTable(pCard);
         if (tabletop.getCardOnTable() == null) {
             deck.getDeck().remove(pCard);
@@ -46,7 +49,7 @@ public class Control {
         }
     }
 
-    private boolean überpruefenCarte(Card pCard) {
+    public boolean überpruefenCarte(Card pCard) {
         boolean validMove = false;
         if (pCard.getColorValue() == 4) {
             validMove = true;
@@ -55,12 +58,15 @@ public class Control {
                 tabletop.getCardOnTable().getColorValue() == 4) {
             validMove = true;
         } else {
-            System.out.println("Diese Karte kann nicht gewählt werden");
+            if (activePlayer == 0) {
+                System.out.println("Diese Karte kann nicht gewählt werden");
+            }
+
         }
         return validMove;
     }
 
-    private void aufnehmenKarte(int pSpieler) {
+    public void aufnehmenKarte(int pSpieler) {
         spieler.get(pSpieler).addCardToHand(deck.getDeck().get(0));
         deck.getDeck().remove(0);
         if (deck.getDeck().isEmpty()) {
@@ -94,7 +100,24 @@ public class Control {
     }
 
     private void farbwechsel() {
-        layDownCard(new Card(new UserInput().auswahlFarbe(), 69), 0);
+        if (activePlayer == 0){
+            layDownCard(new Card(new UserInput().auswahlFarbe(), 69), 0);
+        }else{
+            layDownCard(new Card (bot.get(activePlayer-1).auswaehlenFarbe(),69),0);
+        }
+
+    }
+
+    private void ueberpruefenUno(){
+        spieler.get(activePlayer).setUno(new UserInput().eingabeUno());
+        if (!spieler.get(activePlayer).hatUnoGesagt()) {
+            System.out.println("du hast vergessen uno zu sagen. Strafe: +4 Karten");
+            aufnehmenKarte(activePlayer);
+            aufnehmenKarte(activePlayer);
+            aufnehmenKarte(activePlayer);
+            aufnehmenKarte(activePlayer);
+            activePlayer = nextPlayer();
+        }
     }
 
     private void performAction(Card pCard) {
@@ -154,35 +177,41 @@ public class Control {
         while (isGameActive()) {
             printCardsOnTable();
             sotierenKarten();
-            printHand(activePlayer);
-            Card ausgwCard = null;
-            if (spieler.get(activePlayer).getHand().size() == 1 && !spieler.get(activePlayer).hatUnoGesagt()) {
-                spieler.get(activePlayer).setUno( new UserInput().eingabeUno());
-                if (!spieler.get(activePlayer).hatUnoGesagt()) {
-                    System.out.println("du hast vergessen uno zu sagen. Strafe: +4 Karten");
-                    aufnehmenKarte(activePlayer);
-                    aufnehmenKarte(activePlayer);
-                    aufnehmenKarte(activePlayer);
-                    aufnehmenKarte(activePlayer);
-                    activePlayer = nextPlayer();
+            if (activePlayer == 0) {
+                printHand(activePlayer);
+
+                if (spieler.get(activePlayer).getHand().size() == 1 && !spieler.get(activePlayer).hatUnoGesagt()) {
+                    ueberpruefenUno();
+                } else {
+                    int auswahl = new UserInput().auswahlKarte();
+                    if (auswahl == 98) {
+                        aufnehmenKarte(activePlayer);
+                        activePlayer = nextPlayer();
+                    } else if (auswahl < spieler.get(activePlayer).getHand().size()) {
+                        ausgwCard = spieler.get(activePlayer).getHand().get(auswahl);
+                        if (überpruefenCarte(ausgwCard)) {
+                            layDownCard(ausgwCard, activePlayer);
+                            if (isActionCard(ausgwCard)) {
+                                performAction(ausgwCard);
+                            }
+                            activePlayer = nextPlayer();
+                        }
+                    } else {
+                        System.out.println("bitte wähle eine der angegebenen Karten");
+                    }
                 }
             } else {
-                int auswahl = new UserInput().auswahlKarte();
-                if (auswahl == 98) {
-                    aufnehmenKarte(activePlayer);
-                    activePlayer = nextPlayer();
-                } else if (auswahl < spieler.get(activePlayer).getHand().size()) {
-                    ausgwCard = spieler.get(activePlayer).getHand().get(auswahl);
-                    if (überpruefenCarte(ausgwCard)) {
-                        layDownCard(ausgwCard, activePlayer);
-                        if (isActionCard(ausgwCard)) {
-                            performAction(ausgwCard);
-                        }
-                        activePlayer = nextPlayer();
+                bot.get(activePlayer - 1).reaction();
+                if (ausgwCard != null){
+                    layDownCard(ausgwCard,activePlayer);
+                    if (isActionCard(ausgwCard)){
+                        performAction(ausgwCard);
                     }
-                } else {
-                    System.out.println("bitte wähle eine der angegebenen Karten");
+                }else{
+                    aufnehmenKarte(activePlayer);
                 }
+
+                activePlayer = nextPlayer();
             }
 
 
@@ -195,14 +224,19 @@ public class Control {
         spieler.add(new Spieler(new UserInput().auswahlName()));
         for (int i = 1; i < pAnzSpieler; i++) {
             spieler.add(new Spieler(i));
+            bot.add(new Bot(spieler.get(i).getName(), spieler.get(i), this));
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 7; i++) {
             for (int j = 0; j < pAnzSpieler; j++) {
                 spieler.get(j).addCardToHand(deck.getDeck().get(i + j));
                 deck.getDeck().remove(i + j);
             }
         }
         layDownCard(deck.getDeck().get(0), 0);
+    }
+
+    public void setAusgwCard(Card pCard){
+        ausgwCard = pCard;
     }
 
     public void start() {

@@ -33,6 +33,10 @@ public class Spieler {
         return name;
     }
 
+    public int getNr(){
+        return nr;
+    }
+
     public void setUno(boolean pUno){
         uno = pUno;
     }
