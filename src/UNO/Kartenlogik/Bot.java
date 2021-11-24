@@ -1,5 +1,8 @@
-import Kartenlogik.Card;
-import Kartenlogik.Spieler;
+package UNO.Kartenlogik;
+
+import UNO.Control;
+import UNO.Kartenlogik.Card;
+import UNO.Kartenlogik.Spieler;
 
 import java.util.ArrayList;
 

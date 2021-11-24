@@ -1,4 +1,4 @@
-import Kartenlogik.Card;
+package UNO.Kartenlogik;
 
 public class Tabletop {
     private Card cardOnTable;

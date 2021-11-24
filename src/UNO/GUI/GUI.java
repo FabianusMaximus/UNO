@@ -1,8 +1,9 @@
-import Kartenlogik.Card;
-import Kartenlogik.Spieler;
+package UNO.GUI;
 
-import javax.swing.*;
-import java.awt.*;
+import UNO.Control;
+import UNO.Kartenlogik.Card;
+import UNO.Kartenlogik.Spieler;
+
 import java.util.ArrayList;
 
 public class GUI {

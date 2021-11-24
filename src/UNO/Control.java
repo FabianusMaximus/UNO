@@ -1,6 +1,10 @@
-import Kartenlogik.Card;
-import Kartenlogik.Deck;
-import Kartenlogik.Spieler;
+package UNO;
+
+import UNO.GUI.GUI;
+import UNO.GUI.GUIGame;
+import UNO.GUI.GUIStart;
+import UNO.Kartenlogik.*;
+import UNO.util.UserInput;
 
 import java.util.ArrayList;
 

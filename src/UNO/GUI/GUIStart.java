@@ -1,3 +1,7 @@
+package UNO.GUI;
+
+import UNO.Control;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +18,7 @@ public class GUIStart extends JFrame implements ActionListener {
     public GUIStart(Control pControl){
         control = pControl;
 
-        setTitle("UNO - Gamescreen");
+        setTitle("UNO.UNO - Gamescreen");
         Container cp = getContentPane();
         cp.setLayout(null);
 
@@ -36,14 +40,15 @@ public class GUIStart extends JFrame implements ActionListener {
         cp.add(tf_Deck);
 
         tf_Name = new JTextField();
-        tf_Name.setBounds(160,90,30,30);
+        tf_Name.setBounds(160,130,30,30);
+        cp.add(tf_Name);
 
         btn_start = new JButton("Start");
         btn_start.setBounds(40,130,150,40);
         btn_start.addActionListener(this);
         cp.add(btn_start);
 
-        setSize(250, 250);
+        setSize(400, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setVisible(true);

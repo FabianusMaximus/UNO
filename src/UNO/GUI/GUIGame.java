@@ -1,3 +1,7 @@
+package UNO.GUI;
+
+import UNO.Control;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -6,7 +10,7 @@ public class GUIGame extends JFrame {
 
     public GUIGame(Control pControl) {
         control = pControl;
-        setTitle("UNO - Gamescreen");
+        setTitle("UNO.UNO - Gamescreen");
         Container cp = getContentPane();
         cp.setLayout(null);
 

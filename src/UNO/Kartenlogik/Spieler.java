@@ -1,4 +1,4 @@
-package Kartenlogik;
+package UNO.Kartenlogik;
 
 import java.util.ArrayList;
 
