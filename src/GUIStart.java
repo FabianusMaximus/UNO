@@ -9,6 +9,7 @@ public class GUIStart extends JFrame implements ActionListener {
     private JLabel jl_anzDeck;
     private JTextField tf_Spieler;
     private JTextField tf_Deck;
+    private JTextField tf_Name;
     private JButton btn_start;
     public GUIStart(Control pControl){
         control = pControl;
@@ -34,6 +35,9 @@ public class GUIStart extends JFrame implements ActionListener {
         tf_Deck.addActionListener(this);
         cp.add(tf_Deck);
 
+        tf_Name = new JTextField();
+        tf_Name.setBounds(160,90,30,30);
+
         btn_start = new JButton("Start");
         btn_start.setBounds(40,130,150,40);
         btn_start.addActionListener(this);
@@ -47,9 +51,9 @@ public class GUIStart extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == tf_Deck){
-            control.start();
-        }else if (e.getSource() == btn_start){
+        if (e.getSource() == tf_Deck || e.getSource() == btn_start){
+            control.setAnzSpieler(Integer.parseInt(tf_Spieler.getText()));
+            control.setDeck(Integer.parseInt(tf_Deck.getText()));
             control.start();
         }
     }

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 public class Control {
     private Deck deck;
     private GUI theGUI;
-    //private GUIGame theGameGUI;
-    //private GUIStart theStartGUI;
+    private GUIGame theGameGUI;
+    private GUIStart theStartGUI;
     private Tabletop tabletop;
     private ArrayList<Bot> bot = new ArrayList<>();
     private ArrayList<Spieler> spieler = new ArrayList<>();
@@ -20,16 +20,20 @@ public class Control {
 
     public Control() {
         theGUI = new GUI(this);
-        //theStartGUI = new GUIStart(this);
+        theStartGUI = new GUIStart(this);
         tabletop = new Tabletop();
 
-        anzSpieler = new UserInput().inputNrPlayer();
-        deck = new Deck(new UserInput().inputAnzKarten());
+        setAnzSpieler(new UserInput().inputNrPlayer());
+        setDeck(new UserInput().inputAnzKarten());
 
     }
 
-    private void printDeck() {
-        theGUI.printDeck(deck.getDeck());
+    public void setDeck(int pAnz){
+        deck = new Deck(pAnz);
+    }
+
+    public void setAnzSpieler(int pAnz){
+        anzSpieler = pAnz;
     }
 
     private void printHand(int pSpieler) {
@@ -132,6 +136,7 @@ public class Control {
             case 10:
                 aufnehmenKarte(nextPlayer());
                 aufnehmenKarte(nextPlayer());
+                activePlayer = nextPlayer();
                 break;
             case 11:
                 if (anzSpieler == 2) {
@@ -209,7 +214,7 @@ public class Control {
                 }
             } else {
                 bot.get(activePlayer - 1).reaction();
-                if (bot.get(activePlayer-1).kannSpielen()) {
+                if (bot.get(activePlayer - 1).kannSpielen()) {
                     layDownCard(ausgwCard, activePlayer);
                     if (isActionCard(ausgwCard)) {
                         performAction(ausgwCard);
@@ -232,7 +237,7 @@ public class Control {
         int difficulty = new UserInput().auswahlDifficulty();
         for (int i = 1; i < pAnzSpieler; i++) {
             spieler.add(new Spieler(i));
-            bot.add(new Bot(spieler.get(i).getName(), spieler.get(i), this,difficulty));
+            bot.add(new Bot(spieler.get(i).getName(), spieler.get(i), this, difficulty));
         }
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < pAnzSpieler; j++) {
@@ -251,7 +256,6 @@ public class Control {
         deck.shuffle();
         austeilen(anzSpieler);
         gamecycle();
-
 
 
     }
