@@ -2,6 +2,7 @@ package UNO.GUI;
 
 import UNO.Control;
 import UNO.Kartenlogik.Card;
+import UNO.Kartenlogik.Tabletop;
 
 import javax.swing.*;
 import java.awt.*;
@@ -99,9 +100,11 @@ public class GUIGame extends JFrame implements ActionListener {
 
     private void updateGrid() {
         grid.setColumns(control.getCardsOnHand().size());
+        this.revalidate();
     }
 
     private void designCOT() {
+        cardOnTable.setText(control.getCardOnTable().getName());
         switch (control.getCardOnTable().getColorValue()) {
             case 0 -> cardOnTablePanel.setBackground(Color.red);
             case 1 -> cardOnTablePanel.setBackground(Color.green);
@@ -123,6 +126,8 @@ public class GUIGame extends JFrame implements ActionListener {
                 if (control.überpruefenCarte(control.getCardsOnHand().get(i))) {
                     control.layDownCard(control.getCardsOnHand().get(i), 0);
                     cardsOnHandPanel.remove(btn_Cards.get(i));
+                    btn_Cards.remove(i);
+                    designCOT();
                     updateGrid();
                     this.repaint();
                 }
