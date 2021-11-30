@@ -21,22 +21,23 @@ public class Card {
             colorValue = 4;
         }
         if (value <= 9) {
-            name = color + " " + value;
+            name = String.valueOf(value);
         } else if (value == 10 && !color.equalsIgnoreCase("Black")) {
-            name = color + " " + "+2";
+            name = "+2";
         } else if (value == 11 && !color.equalsIgnoreCase("Black")) {
-            name = color + " " + "reverse";
+            name = "reverse";
         } else if (value == 12 && !color.equalsIgnoreCase("Black")) {
-            name = color + " " + "block";
+            name = "block";
         } else if (value == 13 && color.equalsIgnoreCase("Black")) {
-            name = "color swap";
+            name = "swap";
         } else if (value == 14 && color.equalsIgnoreCase("Black")) {
-            name = "color swap + 4";
+            name = "+ 4";
         }else if(value == 69){
             name = color;
         }
 
     }
+
 
     public String getColor() {
         return color;

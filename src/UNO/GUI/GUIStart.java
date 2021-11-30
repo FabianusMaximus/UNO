@@ -42,7 +42,7 @@ public class GUIStart extends JFrame implements ActionListener {
         jl_anzSpieler.setBounds(x,y,100,50);
         basePanel.add(jl_anzSpieler);
 
-        tf_Spieler = new JTextField();
+        tf_Spieler = new JTextField("2");
         tf_Spieler.setBounds(160,35,30,30);
         basePanel.add(tf_Spieler);
 
@@ -50,7 +50,7 @@ public class GUIStart extends JFrame implements ActionListener {
         jl_anzDeck.setBounds(x,75,120,50);
         basePanel.add(jl_anzDeck);
 
-        tf_Deck = new JTextField();
+        tf_Deck = new JTextField("1");
         tf_Deck.setBounds(x+140,85,30,30);
         tf_Deck.addActionListener(this);
         basePanel.add(tf_Deck);
@@ -59,7 +59,7 @@ public class GUIStart extends JFrame implements ActionListener {
         jl_name.setBounds(x,130,120,50);
         basePanel.add(jl_name);
 
-        tf_Name = new JTextField();
+        tf_Name = new JTextField("Fabian");
         tf_Name.setBounds(x+140,130,70,30);
         basePanel.add(tf_Name);
 
@@ -67,7 +67,7 @@ public class GUIStart extends JFrame implements ActionListener {
         jl_difficulty.setBounds(x,165,120,50);
         basePanel.add(jl_difficulty);
 
-        tf_difficulty = new JTextField();
+        tf_difficulty = new JTextField("2");
         tf_difficulty.setBounds(x+140,175,30,30);
         tf_difficulty.addActionListener(this);
         basePanel.add(tf_difficulty);
@@ -78,6 +78,7 @@ public class GUIStart extends JFrame implements ActionListener {
         basePanel.add(btn_start);
 
         setSize(width, height);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setVisible(true);

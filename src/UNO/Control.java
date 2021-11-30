@@ -58,6 +58,10 @@ public class Control {
         return spieler.get(0).getHand();
     }
 
+    public Card getCardOnTable(){
+        return tabletop.getCardOnTable();
+    }
+
     private void printHand(int pSpieler) {
         theGUI.printHand(spieler.get(activePlayer).getName(), pSpieler, spieler);
     }
@@ -274,9 +278,10 @@ public class Control {
     }
 
     public void start() {
-        theGameGUI = new GUIGame(this);
         deck.shuffle();
         austeilen(anzSpieler);
+        sotierenKarten();
+        theGameGUI = new GUIGame(this);
         //gamecycle();
 
 
