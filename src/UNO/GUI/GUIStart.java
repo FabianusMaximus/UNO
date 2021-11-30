@@ -13,9 +13,11 @@ public class GUIStart extends JFrame implements ActionListener {
     private JLabel jl_anzSpieler;
     private JLabel jl_anzDeck;
     private JLabel jl_name;
+    private JLabel jl_difficulty;
     private JTextField tf_Spieler;
     private JTextField tf_Deck;
     private JTextField tf_Name;
+    private JTextField tf_difficulty;
     private JButton btn_start;
 
     private JOptionPane dialog;
@@ -61,8 +63,17 @@ public class GUIStart extends JFrame implements ActionListener {
         tf_Name.setBounds(x+140,130,70,30);
         basePanel.add(tf_Name);
 
+        jl_difficulty = new JLabel("Schwierigkeit (1-3):");
+        jl_difficulty.setBounds(x,165,120,50);
+        basePanel.add(jl_difficulty);
+
+        tf_difficulty = new JTextField();
+        tf_difficulty.setBounds(x+140,175,30,30);
+        tf_difficulty.addActionListener(this);
+        basePanel.add(tf_difficulty);
+
         btn_start = new JButton("Start");
-        btn_start.setBounds(40,180,150,40);
+        btn_start.setBounds(40,220,150,40);
         btn_start.addActionListener(this);
         basePanel.add(btn_start);
 
@@ -74,16 +85,15 @@ public class GUIStart extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == tf_Deck || e.getSource() == btn_start) {
             try{
                 control.setAnzSpieler(Integer.parseInt(tf_Spieler.getText()));
                 control.setDeck(Integer.parseInt(tf_Deck.getText()));
+                control.setName(tf_Name.getText());
+                control.setDifficulty(Integer.parseInt(tf_difficulty.getText()));
+                dispose();
                 control.start();
             }catch (NumberFormatException exception){
-                JOptionPane.showMessageDialog(this,"Alle Felder müssen ausgefüllt sein");
+                JOptionPane.showMessageDialog(this,"Alle Felder müssen korrekt ausgefüllt sein");
             }
-
-
-        }
     }
 }

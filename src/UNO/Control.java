@@ -19,6 +19,8 @@ public class Control {
     private boolean richtung;
     private int activePlayer;
     private int anzSpieler;
+    private String name;
+    private int difficulty;
     private Card ausgwCard = null;
     private String gewinner;
 
@@ -27,8 +29,8 @@ public class Control {
         theStartGUI = new GUIStart(this);
         tabletop = new Tabletop();
 
-        setAnzSpieler(new UserInput().inputNrPlayer());
-        setDeck(new UserInput().inputAnzKarten());
+        //setAnzSpieler(new UserInput().inputNrPlayer());
+        //setDeck(new UserInput().inputAnzKarten());
 
     }
 
@@ -38,6 +40,22 @@ public class Control {
 
     public void setAnzSpieler(int pAnz){
         anzSpieler = pAnz;
+    }
+
+    public int getAnzSpieler(){
+       return anzSpieler;
+    }
+
+    public void setName(String pName){
+        name = pName;
+    }
+
+    public void setDifficulty(int pDifficulty) {
+        difficulty = pDifficulty;
+    }
+
+    public ArrayList<Card> getCardsOnHand(){
+        return spieler.get(0).getHand();
     }
 
     private void printHand(int pSpieler) {
@@ -237,8 +255,7 @@ public class Control {
     }
 
     private void austeilen(int pAnzSpieler) {
-        spieler.add(new Spieler(new UserInput().auswahlName()));
-        int difficulty = new UserInput().auswahlDifficulty();
+        spieler.add(new Spieler(name));
         for (int i = 1; i < pAnzSpieler; i++) {
             spieler.add(new Spieler(i));
             bot.add(new Bot(spieler.get(i).getName(), spieler.get(i), this, difficulty));
@@ -257,11 +274,11 @@ public class Control {
     }
 
     public void start() {
+        theGameGUI = new GUIGame(this);
         deck.shuffle();
         austeilen(anzSpieler);
-        gamecycle();
+        //gamecycle();
 
 
     }
-
 }
