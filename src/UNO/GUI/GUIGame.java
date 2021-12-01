@@ -133,6 +133,12 @@ public class GUIGame extends JFrame implements ActionListener {
                 }
             }
         }
+        if (e.getSource() == btn_Stapel){
+            control.aufnehmenKarte(0);
+            updateGrid();
+            designCards();
+            this.repaint();
+        }
 
     }
 }

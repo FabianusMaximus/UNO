@@ -30,7 +30,7 @@ public class GUIStart extends JFrame implements ActionListener {
     public GUIStart(Control pControl) {
         control = pControl;
 
-        setTitle("UNO - Gamescreen");
+        setTitle("UNO - Startscreen");
         Container cp = getContentPane();
         cp.setLayout(new BorderLayout());
 
