@@ -5,9 +5,11 @@ import UNO.Kartenlogik.Card;
 import UNO.Kartenlogik.Tabletop;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class GUIGame extends JFrame implements ActionListener {
@@ -19,6 +21,7 @@ public class GUIGame extends JFrame implements ActionListener {
     private JPanel cardsOnHandPanel;
 
     private JButton btn_Stapel;
+    private JButton btn_Uno;
     private JPanel cardOnTablePanel;
     private JLabel cardOnTable;
     private ArrayList<JButton> btn_Cards = new ArrayList<>();
@@ -54,10 +57,23 @@ public class GUIGame extends JFrame implements ActionListener {
 
         designCOT();
 
-
         playersPanel = new JPanel();
         playersPanel.setBounds(10, 187, 965, 180);
         basePanel.add(playersPanel);
+
+        jl_CardsOtherPlayer = new JLabel[control.getAnzSpieler() - 1];
+        for (int i = 0; i < jl_CardsOtherPlayer.length; i++) {
+            jl_CardsOtherPlayer[i] = new JLabel();
+            jl_CardsOtherPlayer[i].setText(control.getName(i + 1) + ": " +
+                    control.getCardsOnHand(i + 1).size());
+            jl_CardsOtherPlayer[i].setBounds(20 + (i * 55), 200, 50, 50);
+            playersPanel.add(jl_CardsOtherPlayer[i]);
+        }
+
+        btn_Uno = new JButton("UNO");
+        btn_Uno.setBounds(10,50,100,50);
+        btn_Uno.setVisible(false);
+        basePanel.add(btn_Uno);
 
         cardsOnHandPanel = new JPanel();
         cardsOnHandPanel.setBounds(10, 375, 965, 180);
@@ -74,9 +90,9 @@ public class GUIGame extends JFrame implements ActionListener {
     }
 
     private void designCards() {
-        ArrayList<Card> holdCards = control.getCardsOnHand();
+        ArrayList<Card> holdCards = control.getCardsOnHand(0);
         updateGrid();
-        for (int i = 0; i < holdCards.size(); i++) {
+        while (holdCards.size() > btn_Cards.size()) {
             btn_Cards.add(new JButton());
         }
         for (int i = 0; i < btn_Cards.size(); i++) {
@@ -99,7 +115,8 @@ public class GUIGame extends JFrame implements ActionListener {
     }
 
     private void updateGrid() {
-        grid.setColumns(control.getCardsOnHand().size());
+        grid.setColumns(control.getCardsOnHand(0).size());
+        cardsOnHandPanel.setLayout(grid);
         this.revalidate();
     }
 
@@ -117,28 +134,46 @@ public class GUIGame extends JFrame implements ActionListener {
         }
     }
 
+    private void updateOtherPlayers() {
+        for (int i = 0; i < jl_CardsOtherPlayer.length; i++) {
+            jl_CardsOtherPlayer[i].setText(control.getName(i + 1) + ": " +
+                    control.getCardsOnHand(i + 1).size());
+        }
+    }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (int i = 0; i < btn_Cards.size(); i++) {
-            if (e.getSource().equals(btn_Cards.get(i))) {
-                if (control.überpruefenCarte(control.getCardsOnHand().get(i))) {
-                    control.layDownCard(control.getCardsOnHand().get(i), 0);
-                    cardsOnHandPanel.remove(btn_Cards.get(i));
-                    btn_Cards.remove(i);
-                    designCOT();
-                    updateGrid();
-                    this.repaint();
+        if (control.getActivePlayer() == 0) {
+            for (int i = 0; i < btn_Cards.size(); i++) {
+                if (e.getSource().equals(btn_Cards.get(i))) {
+                    if (control.überpruefenCarte(control.getCardsOnHand(0).get(i))) {
+                        control.layDownCard(control.getCardsOnHand(0).get(i), 0);
+                        cardsOnHandPanel.remove(btn_Cards.get(i));
+                        btn_Cards.remove(i);
+                        designCOT();
+                        updateGrid();
+                        this.repaint();
+                    }
                 }
             }
+            if (e.getSource() == btn_Stapel) {
+                control.aufnehmenKarte(0);
+                updateGrid();
+                designCards();
+                this.repaint();
+
+            }
+                control.setActivePlayer();
+                control.reactionBot();
+                designCOT();
+                updateGrid();
+                updateOtherPlayers();
+                this.repaint();
+        } else {
+            JOptionPane.showMessageDialog(this, "DU bist nicht an der Reihe");
         }
-        if (e.getSource() == btn_Stapel){
-            control.aufnehmenKarte(0);
-            updateGrid();
-            designCards();
-            this.repaint();
-        }
+
 
     }
 }

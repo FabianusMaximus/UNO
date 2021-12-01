@@ -22,6 +22,9 @@ public class Bot {
         difficulty = pDifficulty;
     }
 
+    /**
+     * wählt die erste Krate aus, die er legen kann
+     */
     private void berechnenSpielzugEasy() {
         ArrayList<Card> holdCards;
         holdCards = spieler.getHand();

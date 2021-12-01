@@ -90,7 +90,7 @@ public class GUIStart extends JFrame implements ActionListener {
                 control.setAnzSpieler(Integer.parseInt(tf_Spieler.getText()));
                 control.setDeck(Integer.parseInt(tf_Deck.getText()));
                 control.setName(tf_Name.getText());
-                control.setDifficulty(Integer.parseInt(tf_difficulty.getText()));
+                control.setDifficulty(Integer.parseInt(tf_difficulty.getText())-1);
                 dispose();
                 control.start();
             }catch (NumberFormatException exception){

@@ -54,12 +54,24 @@ public class Control {
         difficulty = pDifficulty;
     }
 
-    public ArrayList<Card> getCardsOnHand(){
-        return spieler.get(0).getHand();
+    public void setActivePlayer(){
+        activePlayer = nextPlayer();
+    }
+
+    public ArrayList<Card> getCardsOnHand(int index){
+        return spieler.get(index).getHand();
     }
 
     public Card getCardOnTable(){
         return tabletop.getCardOnTable();
+    }
+
+    public String getName(int index){
+        return spieler.get(index).getName();
+    }
+
+    public int getActivePlayer(){
+        return activePlayer;
     }
 
     private void printHand(int pSpieler) {
@@ -103,6 +115,7 @@ public class Control {
     public void aufnehmenKarte(int pSpieler) {
         spieler.get(pSpieler).addCardToHand(deck.getDeck().get(0));
         deck.getDeck().remove(0);
+        sotierenKarten();
         if (deck.getDeck().isEmpty()) {
             deck = new Deck(1);
             deck.shuffle();
@@ -208,6 +221,20 @@ public class Control {
         }
     }
 
+    public void reactionBot(){
+        bot.get(activePlayer-1).reaction();
+        if (bot.get(activePlayer - 1).kannSpielen()) {
+            layDownCard(ausgwCard, activePlayer);
+            if (isActionCard(ausgwCard)) {
+                performAction(ausgwCard);
+            }
+        } else {
+            aufnehmenKarte(activePlayer);
+        }
+
+        activePlayer = nextPlayer();
+    }
+
     private void gamecycle() {
         richtung = true;
 
@@ -238,18 +265,6 @@ public class Control {
                         System.out.println("bitte wähle eine der angegebenen Karten");
                     }
                 }
-            } else {
-                bot.get(activePlayer - 1).reaction();
-                if (bot.get(activePlayer - 1).kannSpielen()) {
-                    layDownCard(ausgwCard, activePlayer);
-                    if (isActionCard(ausgwCard)) {
-                        performAction(ausgwCard);
-                    }
-                } else {
-                    aufnehmenKarte(activePlayer);
-                }
-
-                activePlayer = nextPlayer();
             }
 
 
