@@ -76,4 +76,12 @@ public class Card {
     public String getName() {
         return name;
     }
+
+    public boolean isActionCard() {
+        boolean actionCard = false;
+        if (this.getValue() >= 9) {
+            actionCard = true;
+        }
+        return actionCard;
+    }
 }

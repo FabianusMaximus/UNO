@@ -88,6 +88,9 @@ public class Control {
 
     public void layDownCard(Card pCard, int pSpieler) {
         tabletop.layCardOnTable(pCard);
+        if (pCard.isActionCard()){
+            performAction(pCard);
+        }
         if (tabletop.getCardOnTable() == null) {
             deck.getDeck().remove(pCard);
         } else {
@@ -122,13 +125,6 @@ public class Control {
         }
     }
 
-    private boolean isActionCard(Card pCard) {
-        boolean actionCard = false;
-        if (pCard.getValue() >= 9) {
-            actionCard = true;
-        }
-        return actionCard;
-    }
 
     private int nextPlayer() {
         int i = activePlayer;
@@ -225,7 +221,7 @@ public class Control {
         bot.get(activePlayer-1).reaction();
         if (bot.get(activePlayer - 1).kannSpielen()) {
             layDownCard(ausgwCard, activePlayer);
-            if (isActionCard(ausgwCard)) {
+            if (ausgwCard.isActionCard()) {
                 performAction(ausgwCard);
             }
         } else {
@@ -256,7 +252,7 @@ public class Control {
                         ausgwCard = spieler.get(activePlayer).getHand().get(auswahl);
                         if (überpruefenCarte(ausgwCard)) {
                             layDownCard(ausgwCard, activePlayer);
-                            if (isActionCard(ausgwCard)) {
+                            if (ausgwCard.isActionCard()) {
                                 performAction(ausgwCard);
                             }
                             activePlayer = nextPlayer();
