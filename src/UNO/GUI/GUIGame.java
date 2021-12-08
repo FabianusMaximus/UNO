@@ -70,13 +70,14 @@ public class GUIGame extends JFrame implements ActionListener {
         }
 
         btn_Next = new JButton("weiter");
-        if (control.getActivePlayer() == 0){
+        if (control.getActivePlayer() == 0) {
             btn_Next.setVisible(false);
         }
+        btn_Next.addActionListener(this);
         playersPanel.add(btn_Next);
 
         btn_Uno = new JButton("UNO");
-        btn_Uno.setBounds(10,50,100,50);
+        btn_Uno.setBounds(10, 50, 100, 50);
         btn_Uno.setVisible(false);
         basePanel.add(btn_Uno);
 
@@ -87,19 +88,19 @@ public class GUIGame extends JFrame implements ActionListener {
 
         farbauswahlPanel = new JPanel();
         farbauswahlPanel.setBounds(10, 375, 965, 180);
-        farbauswahlPanel.setLayout(new GridLayout(1,4));
+        farbauswahlPanel.setLayout(new GridLayout(1, 4));
         setVisible(false);
         basePanel.add(farbauswahlPanel);
 
         for (int i = 0; i < btn_Farben.length; i++) {
             btn_Farben[i] = new JButton();
             farbauswahlPanel.add(btn_Farben[i]);
+            btn_Farben[i].addActionListener(this);
         }
         btn_Farben[0].setBackground(Color.red);
         btn_Farben[1].setBackground(Color.green);
         btn_Farben[2].setBackground(Color.blue);
         btn_Farben[3].setBackground(Color.yellow);
-
 
 
         designCards();
@@ -144,6 +145,7 @@ public class GUIGame extends JFrame implements ActionListener {
 
     private void designCOT() {
         cardOnTable.setText(control.getCardOnTable().getName());
+        cardOnTable.setForeground(Color.white);
         switch (control.getCardOnTable().getColorValue()) {
             case 0 -> cardOnTablePanel.setBackground(Color.red);
             case 1 -> cardOnTablePanel.setBackground(Color.green);
@@ -161,45 +163,68 @@ public class GUIGame extends JFrame implements ActionListener {
             jl_CardsOtherPlayer[i].setText(control.getName(i + 1) + ": " +
                     control.getCardsOnHand(i + 1).size());
         }
-        if (control.getActivePlayer() == 0){
+        if (control.getActivePlayer() == 0) {
             btn_Next.setVisible(false);
-        }else{
+        } else {
             btn_Next.setVisible(true);
         }
     }
 
-    public void auswahlFarbe(){
-        cardsOnHandPanel.setVisible(false);
-        farbauswahlPanel.setVisible(true);
-    }
-    private void setClickable(boolean clickable){
-        if (clickable){
-            for (int i = 0; i <btn_Cards.size() ; i++) {
-                btn_Cards.get(i).addActionListener(this);
-            }
-        }else{
-            for (int i = 0; i <btn_Cards.size() ; i++) {
-                btn_Cards.get(i).removeActionListener(this);
-            }
+    public void auswahlFarbe(boolean auswahl) {
+        if (auswahl) {
+            cardsOnHandPanel.setVisible(false);
+            farbauswahlPanel.setVisible(true);
+        } else {
+            cardsOnHandPanel.setVisible(true);
+            farbauswahlPanel.setVisible(false);
         }
-    }
 
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (control.getActivePlayer() == 0) {
-            setClickable(true);
             for (int i = 0; i < btn_Cards.size(); i++) {
                 if (e.getSource().equals(btn_Cards.get(i))) {
-                    if (control.überpruefenCarte(control.getCardsOnHand(0).get(i))) {
+                    if (control.ueberpruefenKarte(control.getCardsOnHand(0).get(i))) {
                         control.layDownCard(control.getCardsOnHand(0).get(i), 0);
                         cardsOnHandPanel.remove(btn_Cards.get(i));
                         btn_Cards.remove(i);
-                        setClickable(false);
                         designCOT();
                         updateGrid();
+                        updateOtherPlayers();
+                        control.setActivePlayer();
                         this.repaint();
+                        break;
                     }
+                }
+            }
+            //TODO farbe auswählbar machen
+            for (int i = 0; i < btn_Farben.length; i++) {
+                if (e.getSource() == btn_Farben[i]) {
+                    String farbe;
+                    switch (i) {
+                        case 0:
+                            farbe = "Red";
+                            break;
+                        case 1:
+                            farbe = "Green";
+                            break;
+                        case 2:
+                            farbe = "Blue";
+                            break;
+                        case 3:
+                            farbe = "Yellow";
+                            break;
+                        default:
+                            farbe = "undefiniert";
+                            break;
+                    }
+                    control.layDownCard(new Card(farbe, 69), 0);
+                    designCOT();
+                    auswahlFarbe(false);
+                    this.repaint();
+                    break;
                 }
             }
             if (e.getSource() == btn_Stapel) {
@@ -207,23 +232,25 @@ public class GUIGame extends JFrame implements ActionListener {
                 updateGrid();
                 designCards();
                 this.repaint();
+                control.setActivePlayer();
+            }
+            if (control.getActivePlayer() != 0) {
+                btn_Next.setVisible(true);
             }
 
-            control.setActivePlayer();
 
-
-        }else if (e.getSource() == btn_Next){
-            control.setActivePlayer();
+        } else if (e.getSource() == btn_Next) {
             control.reactionBot();
             designCOT();
             updateGrid();
             updateOtherPlayers();
             this.repaint();
-        }
-        else {
-            JOptionPane.showMessageDialog(this, "DU bist nicht an der Reihe");
+        } else {
+            //JOptionPane.showMessageDialog(this, "DU bist nicht an der Reihe");
         }
 
 
     }
 }
+
+

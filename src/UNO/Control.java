@@ -1,6 +1,5 @@
 package UNO;
 
-import UNO.GUI.GUI;
 import UNO.GUI.GUIGame;
 import UNO.GUI.GUIStart;
 import UNO.Kartenlogik.*;
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 
 public class Control {
     private Deck deck;
-    private GUI theGUI;
     private GUIGame theGameGUI;
     private GUIStart theStartGUI;
     private Tabletop tabletop;
@@ -24,28 +22,24 @@ public class Control {
     private String gewinner;
 
     public Control() {
-        theGUI = new GUI(this);
         theStartGUI = new GUIStart(this);
         tabletop = new Tabletop();
 
-        //setAnzSpieler(new UserInput().inputNrPlayer());
-        //setDeck(new UserInput().inputAnzKarten());
-
     }
 
-    public void setDeck(int pAnz){
+    public void setDeck(int pAnz) {
         deck = new Deck(pAnz);
     }
 
-    public void setAnzSpieler(int pAnz){
+    public void setAnzSpieler(int pAnz) {
         anzSpieler = pAnz;
     }
 
-    public int getAnzSpieler(){
-       return anzSpieler;
+    public int getAnzSpieler() {
+        return anzSpieler;
     }
 
-    public void setName(String pName){
+    public void setName(String pName) {
         name = pName;
     }
 
@@ -53,43 +47,32 @@ public class Control {
         difficulty = pDifficulty;
     }
 
-    public void setActivePlayer(){
+    public void setActivePlayer() {
         activePlayer = nextPlayer();
     }
 
-    public ArrayList<Card> getCardsOnHand(int index){
+    public ArrayList<Card> getCardsOnHand(int index) {
         return spieler.get(index).getHand();
     }
 
-    public Card getCardOnTable(){
+    public Card getCardOnTable() {
         return tabletop.getCardOnTable();
     }
 
-    public String getName(int index){
+    public String getName(int index) {
         return spieler.get(index).getName();
     }
 
-    public int getActivePlayer(){
+    public int getActivePlayer() {
         return activePlayer;
-    }
-
-    private void printHand(int pSpieler) {
-        theGUI.printHand(spieler.get(activePlayer).getName(), pSpieler, spieler);
-    }
-
-    private void printCardsOnTable() {
-        theGUI.printTabletop(tabletop.getCardOnTable());
-    }
-
-    private void printCardsOtherPlayers() {
-        theGUI.printCardsOtherPlayers(spieler);
     }
 
     public void layDownCard(Card pCard, int pSpieler) {
         tabletop.layCardOnTable(pCard);
-        if (pCard.isActionCard()){
+        if (pCard.isActionCard()) {
             performAction(pCard);
         }
+        //TODO wenn erste Karte +4 oder swap ist -> crash
         if (tabletop.getCardOnTable() == null) {
             deck.getDeck().remove(pCard);
         } else {
@@ -97,7 +80,7 @@ public class Control {
         }
     }
 
-    public boolean überpruefenCarte(Card pCard) {
+    public boolean ueberpruefenKarte(Card pCard) {
         boolean validMove = false;
         if (pCard.getColorValue() == 4) {
             validMove = true;
@@ -141,6 +124,13 @@ public class Control {
         return i;
     }
 
+    private void auswaehlenFarbe(){
+        if (activePlayer == 0){
+            theGameGUI.auswahlFarbe(true);
+        }else{
+            layDownCard(new Card(bot.get(activePlayer-1).auswaehlenFarbe(),69),activePlayer);
+        }
+    }
 
 
     private void performAction(Card pCard) {
@@ -162,32 +152,20 @@ public class Control {
                 }
 
             case 12:
-                activePlayer = nextPlayer();
+                    activePlayer = nextPlayer();
                 break;
-            case 13:
-                theGameGUI.auswahlFarbe();
 
+            case 13:
+                auswaehlenFarbe();
                 break;
             case 14:
-                theGameGUI.auswahlFarbe();
+                auswaehlenFarbe();
                 aufnehmenKarte(nextPlayer());
                 aufnehmenKarte(nextPlayer());
                 aufnehmenKarte(nextPlayer());
                 aufnehmenKarte(nextPlayer());
                 break;
         }
-    }
-
-    private boolean isGameActive() {
-        boolean activ = true;
-        for (int i = 0; i < spieler.size(); i++) {
-            if (spieler.get(i).getHand().isEmpty()) {
-                activ = false;
-                gewinner = spieler.get(i).getName();
-                break;
-            }
-        }
-        return activ;
     }
 
     private void sotierenKarten() {
@@ -196,8 +174,8 @@ public class Control {
         }
     }
 
-    public void reactionBot(){
-        bot.get(activePlayer-1).reaction();
+    public void reactionBot() {
+        bot.get(activePlayer - 1).reaction();
         if (bot.get(activePlayer - 1).kannSpielen()) {
             layDownCard(ausgwCard, activePlayer);
             if (ausgwCard.isActionCard()) {
@@ -210,43 +188,6 @@ public class Control {
         activePlayer = nextPlayer();
     }
 
-    private void gamecycle() {
-        richtung = true;
-
-        while (isGameActive()) {
-            printCardsOnTable();
-            sotierenKarten();
-            if (activePlayer == 0) {
-                printCardsOtherPlayers();
-                printHand(activePlayer);
-
-                if (spieler.get(activePlayer).getHand().size() == 1 && !spieler.get(activePlayer).hatUnoGesagt()) {
-                    //ueberpruefenUno();
-                } else {
-                    int auswahl = 56;
-                    if (auswahl == 98) {
-                        aufnehmenKarte(activePlayer);
-                        activePlayer = nextPlayer();
-                    } else if (auswahl < spieler.get(activePlayer).getHand().size()) {
-                        ausgwCard = spieler.get(activePlayer).getHand().get(auswahl);
-                        if (überpruefenCarte(ausgwCard)) {
-                            layDownCard(ausgwCard, activePlayer);
-                            if (ausgwCard.isActionCard()) {
-                                performAction(ausgwCard);
-                            }
-                            activePlayer = nextPlayer();
-                        }
-                    } else {
-                        System.out.println("bitte wähle eine der angegebenen Karten");
-                    }
-                }
-            }
-
-
-        }
-        System.out.println("---------Spieler " + gewinner + " hat gewonnen---------");
-
-    }
 
     private void austeilen(int pAnzSpieler) {
         spieler.add(new Spieler(name));
@@ -272,6 +213,7 @@ public class Control {
         austeilen(anzSpieler);
         sotierenKarten();
         theGameGUI = new GUIGame(this);
+
         //gamecycle();
 
 

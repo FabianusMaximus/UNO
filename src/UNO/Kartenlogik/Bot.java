@@ -1,8 +1,6 @@
 package UNO.Kartenlogik;
 
 import UNO.Control;
-import UNO.Kartenlogik.Card;
-import UNO.Kartenlogik.Spieler;
 
 import java.util.ArrayList;
 
@@ -29,7 +27,7 @@ public class Bot {
         ArrayList<Card> holdCards;
         holdCards = spieler.getHand();
         for (int i = 0; i < holdCards.size(); i++) {
-            if (control.überpruefenCarte(holdCards.get(i))) {
+            if (control.ueberpruefenKarte(holdCards.get(i))) {
                 control.setAusgwCard(holdCards.get(i));
                 spielen = true;
             } else {
@@ -55,7 +53,7 @@ public class Bot {
                 case 2 -> anzColor[2]++;
                 case 3 -> anzColor[3]++;
             }
-            if (control.überpruefenCarte(holdCards.get(i))) {
+            if (control.ueberpruefenKarte(holdCards.get(i))) {
                 validCards.add(holdCards.get(i));
             }
         }
