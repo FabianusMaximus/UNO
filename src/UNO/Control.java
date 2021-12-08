@@ -4,7 +4,6 @@ import UNO.GUI.GUI;
 import UNO.GUI.GUIGame;
 import UNO.GUI.GUIStart;
 import UNO.Kartenlogik.*;
-import UNO.util.UserInput;
 
 import java.util.ArrayList;
 
@@ -142,27 +141,7 @@ public class Control {
         return i;
     }
 
-    private void farbwechsel(Card pCard) {
-        if (activePlayer == 0) {
-            layDownCard(new Card(new UserInput().auswahlFarbe(), 69), 0);
-        } else {
-            layDownCard(new Card(bot.get(activePlayer - 1).auswaehlenFarbe(),
-                    69), 0);
-        }
 
-    }
-
-    private void ueberpruefenUno() {
-        spieler.get(activePlayer).setUno(new UserInput().eingabeUno());
-        if (!spieler.get(activePlayer).hatUnoGesagt()) {
-            System.out.println("du hast vergessen uno zu sagen. Strafe: +4 Karten");
-            aufnehmenKarte(activePlayer);
-            aufnehmenKarte(activePlayer);
-            aufnehmenKarte(activePlayer);
-            aufnehmenKarte(activePlayer);
-            activePlayer = nextPlayer();
-        }
-    }
 
     private void performAction(Card pCard) {
         int value = pCard.getValue();
@@ -186,11 +165,11 @@ public class Control {
                 activePlayer = nextPlayer();
                 break;
             case 13:
-                farbwechsel(pCard);
+                theGameGUI.auswahlFarbe();
 
                 break;
             case 14:
-                farbwechsel(pCard);
+                theGameGUI.auswahlFarbe();
                 aufnehmenKarte(nextPlayer());
                 aufnehmenKarte(nextPlayer());
                 aufnehmenKarte(nextPlayer());
@@ -242,9 +221,9 @@ public class Control {
                 printHand(activePlayer);
 
                 if (spieler.get(activePlayer).getHand().size() == 1 && !spieler.get(activePlayer).hatUnoGesagt()) {
-                    ueberpruefenUno();
+                    //ueberpruefenUno();
                 } else {
-                    int auswahl = new UserInput().auswahlKarte();
+                    int auswahl = 56;
                     if (auswahl == 98) {
                         aufnehmenKarte(activePlayer);
                         activePlayer = nextPlayer();
