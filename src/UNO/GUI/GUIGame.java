@@ -135,6 +135,7 @@ public class GUIGame extends JFrame implements ActionListener {
             cardsOnHandPanel.add(btn_Cards.get(i));
 
         }
+        this.repaint();
     }
 
     private void updateGrid() {
@@ -163,11 +164,8 @@ public class GUIGame extends JFrame implements ActionListener {
             jl_CardsOtherPlayer[i].setText(control.getName(i + 1) + ": " +
                     control.getCardsOnHand(i + 1).size());
         }
-        if (control.getActivePlayer() == 0) {
-            btn_Next.setVisible(false);
-        } else {
-            btn_Next.setVisible(true);
-        }
+        btn_Next.setVisible(control.getActivePlayer() != 0);
+        this.repaint();
     }
 
     public void auswahlFarbe(boolean auswahl) {
@@ -178,28 +176,33 @@ public class GUIGame extends JFrame implements ActionListener {
             cardsOnHandPanel.setVisible(true);
             farbauswahlPanel.setVisible(false);
         }
+    }
 
+    private void updateGui(){
+        designCOT();
+        updateGrid();
+        designCards();
+        updateOtherPlayers();
+        this.repaint();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        int ausgCardValue = 0;
+        boolean zug = false;
         if (control.getActivePlayer() == 0) {
             for (int i = 0; i < btn_Cards.size(); i++) {
                 if (e.getSource().equals(btn_Cards.get(i))) {
                     if (control.ueberpruefenKarte(control.getCardsOnHand(0).get(i))) {
+                        ausgCardValue = control.getCardsOnHand(0).get(i).getColorValue();
                         control.layDownCard(control.getCardsOnHand(0).get(i), 0);
                         cardsOnHandPanel.remove(btn_Cards.get(i));
                         btn_Cards.remove(i);
-                        designCOT();
-                        updateGrid();
-                        updateOtherPlayers();
-                        control.setActivePlayer();
-                        this.repaint();
+                        zug = true;
                         break;
                     }
                 }
             }
-            //TODO farbe auswählbar machen
             for (int i = 0; i < btn_Farben.length; i++) {
                 if (e.getSource() == btn_Farben[i]) {
                     String farbe;
@@ -220,31 +223,27 @@ public class GUIGame extends JFrame implements ActionListener {
                             farbe = "undefiniert";
                             break;
                     }
+                    ausgCardValue = 0;
                     control.layDownCard(new Card(farbe, 69), 0);
-                    designCOT();
-                    auswahlFarbe(false);
-                    this.repaint();
+                    zug = true;
+                    control.setActivePlayer();
                     break;
                 }
             }
             if (e.getSource() == btn_Stapel) {
                 control.aufnehmenKarte(0);
-                updateGrid();
-                designCards();
-                this.repaint();
+                ausgCardValue = 0;
+            }
+            if (ausgCardValue != 4 && zug) {
                 control.setActivePlayer();
             }
-            if (control.getActivePlayer() != 0) {
-                btn_Next.setVisible(true);
-            }
+            zug = true;
 
+            updateGui();
 
         } else if (e.getSource() == btn_Next) {
             control.reactionBot();
-            designCOT();
-            updateGrid();
-            updateOtherPlayers();
-            this.repaint();
+            updateGui();
         } else {
             //JOptionPane.showMessageDialog(this, "DU bist nicht an der Reihe");
         }
