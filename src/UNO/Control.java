@@ -19,7 +19,7 @@ public class Control {
     private String name;
     private int difficulty;
     private Card ausgwCard = null;
-    private String gewinner;
+    private Spieler gewinner;
 
     public Control() {
         theStartGUI = new GUIStart(this);
@@ -65,6 +65,10 @@ public class Control {
 
     public int getActivePlayer() {
         return activePlayer;
+    }
+
+    public Spieler getGewinner(){
+        return gewinner;
     }
 
     public void layDownCard(Card pCard, int pSpieler) {
@@ -124,11 +128,11 @@ public class Control {
         return i;
     }
 
-    private void auswaehlenFarbe(){
-        if (activePlayer == 0){
+    private void auswaehlenFarbe() {
+        if (activePlayer == 0) {
             theGameGUI.auswahlFarbe(true);
-        }else{
-            layDownCard(new Card(bot.get(activePlayer-1).auswaehlenFarbe(),69),activePlayer);
+        } else {
+            layDownCard(new Card(bot.get(activePlayer - 1).auswaehlenFarbe(), 69), activePlayer);
         }
     }
 
@@ -152,7 +156,7 @@ public class Control {
                 }
 
             case 12:
-                    activePlayer = nextPlayer();
+                activePlayer = nextPlayer();
                 break;
 
             case 13:
@@ -186,6 +190,18 @@ public class Control {
         }
 
         activePlayer = nextPlayer();
+    }
+
+    public boolean isGameActive() {
+        boolean active = true;
+        for (int i = 0; i < spieler.size(); i++) {
+            if (spieler.get(i).getHand().isEmpty()) {
+                gewinner = spieler.get(i);
+                active = false;
+                break;
+            }
+        }
+        return active;
     }
 
 

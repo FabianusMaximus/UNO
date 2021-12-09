@@ -178,7 +178,7 @@ public class GUIGame extends JFrame implements ActionListener {
         }
     }
 
-    private void updateGui(){
+    private void updateGui() {
         designCOT();
         updateGrid();
         designCards();
@@ -186,66 +186,76 @@ public class GUIGame extends JFrame implements ActionListener {
         this.repaint();
     }
 
+    private boolean isGameActive() {
+        return control.isGameActive();
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         int ausgCardValue = 0;
         boolean zug = false;
-        if (control.getActivePlayer() == 0) {
-            for (int i = 0; i < btn_Cards.size(); i++) {
-                if (e.getSource().equals(btn_Cards.get(i))) {
-                    if (control.ueberpruefenKarte(control.getCardsOnHand(0).get(i))) {
-                        ausgCardValue = control.getCardsOnHand(0).get(i).getColorValue();
-                        control.layDownCard(control.getCardsOnHand(0).get(i), 0);
-                        cardsOnHandPanel.remove(btn_Cards.get(i));
-                        btn_Cards.remove(i);
+        if (isGameActive()) {
+            if (control.getActivePlayer() == 0) {
+                for (int i = 0; i < btn_Cards.size(); i++) {
+                    if (e.getSource().equals(btn_Cards.get(i))) {
+                        if (control.ueberpruefenKarte(control.getCardsOnHand(0).get(i))) {
+                            ausgCardValue = control.getCardsOnHand(0).get(i).getColorValue();
+                            control.layDownCard(control.getCardsOnHand(0).get(i), 0);
+                            cardsOnHandPanel.remove(btn_Cards.get(i));
+                            btn_Cards.remove(i);
+                            zug = true;
+                            break;
+                        }
+                    }
+                }
+                for (int i = 0; i < btn_Farben.length; i++) {
+                    if (e.getSource() == btn_Farben[i]) {
+                        String farbe;
+                        switch (i) {
+                            case 0:
+                                farbe = "Red";
+                                break;
+                            case 1:
+                                farbe = "Green";
+                                break;
+                            case 2:
+                                farbe = "Blue";
+                                break;
+                            case 3:
+                                farbe = "Yellow";
+                                break;
+                            default:
+                                farbe = "undefiniert";
+                                break;
+                        }
+                        ausgCardValue = 0;
+                        control.layDownCard(new Card(farbe, 69), 0);
                         zug = true;
+                        auswahlFarbe(false);
+                        updateGui();
                         break;
                     }
                 }
-            }
-            for (int i = 0; i < btn_Farben.length; i++) {
-                if (e.getSource() == btn_Farben[i]) {
-                    String farbe;
-                    switch (i) {
-                        case 0:
-                            farbe = "Red";
-                            break;
-                        case 1:
-                            farbe = "Green";
-                            break;
-                        case 2:
-                            farbe = "Blue";
-                            break;
-                        case 3:
-                            farbe = "Yellow";
-                            break;
-                        default:
-                            farbe = "undefiniert";
-                            break;
-                    }
-                    ausgCardValue = 0;
-                    control.layDownCard(new Card(farbe, 69), 0);
+                if (e.getSource() == btn_Stapel) {
+                    control.aufnehmenKarte(0);
                     zug = true;
-                    control.setActivePlayer();
-                    break;
+                    ausgCardValue = 0;
                 }
-            }
-            if (e.getSource() == btn_Stapel) {
-                control.aufnehmenKarte(0);
-                ausgCardValue = 0;
-            }
-            if (ausgCardValue != 4 && zug) {
-                control.setActivePlayer();
-            }
-            zug = true;
+                if (ausgCardValue != 4 && zug) {
+                    control.setActivePlayer();
+                }
+                zug = true;
 
-            updateGui();
+                updateGui();
 
-        } else if (e.getSource() == btn_Next) {
-            control.reactionBot();
-            updateGui();
+            } else if (e.getSource() == btn_Next) {
+                control.reactionBot();
+                updateGui();
+            } else {
+                //JOptionPane.showMessageDialog(this, "DU bist nicht an der Reihe");
+            }
         } else {
-            //JOptionPane.showMessageDialog(this, "DU bist nicht an der Reihe");
+            System.out.println(control.getGewinner().getName() + " Hat gewonnen!");
         }
 
 
