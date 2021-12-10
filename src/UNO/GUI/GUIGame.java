@@ -25,6 +25,8 @@ public class GUIGame extends JFrame implements ActionListener {
 
     private JLabel[] jl_CardsOtherPlayer;
 
+    private JTextArea verlauf;
+
     private GridLayout grid = new GridLayout(1, 7, 0, 5);
 
     public GUIGame(Control pControl) {
@@ -54,6 +56,12 @@ public class GUIGame extends JFrame implements ActionListener {
         cardOnTablePanel.add(cardOnTable, BorderLayout.CENTER);
 
         designCOT();
+
+        verlauf = new JTextArea();
+        verlauf.setText("--------------------Verlauf--------------------" + "\n");
+        verlauf.setBounds(620, 20, 200, 150);
+        verlauf.setEditable(false);
+        basePanel.add(verlauf);
 
         playersPanel = new JPanel();
         playersPanel.setBounds(10, 187, 965, 180);
@@ -179,6 +187,7 @@ public class GUIGame extends JFrame implements ActionListener {
     }
 
     private void updateGui() {
+        setVerlauf();
         designCOT();
         updateGrid();
         designCards();
@@ -188,6 +197,15 @@ public class GUIGame extends JFrame implements ActionListener {
 
     private boolean isGameActive() {
         return control.isGameActive();
+    }
+
+    private void setVerlauf() {
+        StringBuilder hold = new StringBuilder("--------------------Verlauf--------------------" + "\n");
+        for (int i = 0; i < control.getVerlauf().size(); i++) {
+            hold.append(control.getVerlauf().get(i));
+        }
+        verlauf.setText(hold.toString());
+
     }
 
     @Override
@@ -260,6 +278,7 @@ public class GUIGame extends JFrame implements ActionListener {
 
 
     }
+
 }
 
 

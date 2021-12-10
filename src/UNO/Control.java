@@ -20,6 +20,7 @@ public class Control {
     private int difficulty;
     private Card ausgwCard = null;
     private Spieler gewinner;
+    private ArrayList<String> verlauf = new ArrayList<>();
 
     public Control() {
         theStartGUI = new GUIStart(this);
@@ -73,6 +74,7 @@ public class Control {
 
     public void layDownCard(Card pCard, int pSpieler) {
         tabletop.layCardOnTable(pCard);
+        addToVerlauf(pCard, pSpieler);
         if (pCard.isActionCard()) {
             performAction(pCard);
         }
@@ -82,6 +84,17 @@ public class Control {
         } else {
             spieler.get(pSpieler).getHand().remove(pCard);
         }
+    }
+
+    public void addToVerlauf(Card pCard, int pSpieler){
+        verlauf.add(spieler.get(pSpieler).getName() + ": " + pCard.getName()+ "\n");
+        if (verlauf.size()>5){
+            verlauf.remove(0);
+        }
+    }
+
+    public ArrayList<String> getVerlauf(){
+        return verlauf;
     }
 
     public boolean ueberpruefenKarte(Card pCard) {
@@ -182,9 +195,6 @@ public class Control {
         bot.get(activePlayer - 1).reaction();
         if (bot.get(activePlayer - 1).kannSpielen()) {
             layDownCard(ausgwCard, activePlayer);
-            if (ausgwCard.isActionCard()) {
-                performAction(ausgwCard);
-            }
         } else {
             aufnehmenKarte(activePlayer);
         }
@@ -218,6 +228,7 @@ public class Control {
             }
         }
         layDownCard(deck.getDeck().get(0), 0);
+        verlauf.remove(0);
     }
 
     public void setAusgwCard(Card pCard) {
