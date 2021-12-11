@@ -23,6 +23,7 @@ public class Control {
     private ArrayList<String> verlauf = new ArrayList<>();
 
     public Control() {
+
         theStartGUI = new GUIStart(this);
         tabletop = new Tabletop();
 
@@ -68,7 +69,7 @@ public class Control {
         return activePlayer;
     }
 
-    public Spieler getGewinner(){
+    public Spieler getGewinner() {
         return gewinner;
     }
 
@@ -78,7 +79,6 @@ public class Control {
         if (pCard.isActionCard()) {
             performAction(pCard);
         }
-        //TODO wenn erste Karte +4 oder swap ist -> crash
         if (tabletop.getCardOnTable() == null) {
             deck.getDeck().remove(pCard);
         } else {
@@ -86,14 +86,14 @@ public class Control {
         }
     }
 
-    public void addToVerlauf(Card pCard, int pSpieler){
-        verlauf.add(spieler.get(pSpieler).getName() + ": " + pCard.getName()+ "\n");
-        if (verlauf.size()>5){
+    public void addToVerlauf(Card pCard, int pSpieler) {
+        verlauf.add(spieler.get(pSpieler).getName() + ": " + pCard.getName() + "\n");
+        if (verlauf.size() > 5) {
             verlauf.remove(0);
         }
     }
 
-    public ArrayList<String> getVerlauf(){
+    public ArrayList<String> getVerlauf() {
         return verlauf;
     }
 
@@ -142,8 +142,10 @@ public class Control {
     }
 
     private void auswaehlenFarbe() {
-        if (activePlayer == 0) {
+        if (activePlayer == 0 && theGameGUI != null) {
             theGameGUI.auswahlFarbe(true);
+        } else if (theGameGUI == null) {
+            layDownCard(new Card("black", 69), 0);
         } else {
             layDownCard(new Card(bot.get(activePlayer - 1).auswaehlenFarbe(), 69), activePlayer);
         }
