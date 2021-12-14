@@ -273,7 +273,8 @@ public class GUIGame extends JFrame implements ActionListener {
                 //JOptionPane.showMessageDialog(this, "DU bist nicht an der Reihe");
             }
         } else {
-            System.out.println(control.getGewinner().getName() + " Hat gewonnen!");
+            new WinScreen(control);
+            dispose();
         }
 
 
