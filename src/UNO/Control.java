@@ -2,6 +2,7 @@ package UNO;
 
 import UNO.GUI.GUIGame;
 import UNO.GUI.GUIStart;
+import UNO.GUI.WinScreen;
 import UNO.Kartenlogik.*;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ public class Control {
     private Deck deck;
     private GUIGame theGameGUI;
     private GUIStart theStartGUI;
+    private WinScreen theWinScreen;
     private Tabletop tabletop;
     private ArrayList<Bot> bot = new ArrayList<>();
     private ArrayList<Spieler> spieler = new ArrayList<>();
@@ -235,6 +237,12 @@ public class Control {
 
     public void setAusgwCard(Card pCard) {
         ausgwCard = pCard;
+    }
+
+    public void setWinScreen() {
+        if (theWinScreen == null) {
+            theWinScreen = new WinScreen(this);
+        }
     }
 
     public void start() {

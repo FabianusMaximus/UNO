@@ -29,6 +29,9 @@ public class GUIGame extends JFrame implements ActionListener {
 
     private GridLayout grid = new GridLayout(1, 7, 0, 5);
 
+    private int ausgCardValue = 0;
+    private boolean zug = false;
+
     public GUIGame(Control pControl) {
         control = pControl;
         jl_CardsOtherPlayer = new JLabel[control.getAnzSpieler()];
@@ -273,7 +276,7 @@ public class GUIGame extends JFrame implements ActionListener {
                 //JOptionPane.showMessageDialog(this, "DU bist nicht an der Reihe");
             }
         } else {
-            new WinScreen(control);
+            control.setWinScreen();
             dispose();
         }
 

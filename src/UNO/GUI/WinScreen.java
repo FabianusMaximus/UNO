@@ -38,7 +38,7 @@ public class WinScreen extends JFrame implements ActionListener {
         lb_winner = new JLabel(control.getGewinner().getName() + " hat gewonnen");
         lb_winner.setForeground(Color.white);
         lb_winner.setBackground(Color.white);
-        jp_Hintergrund.add(lb_winner);
+        jp_Hintergrund.add(lb_winner, BorderLayout.CENTER);
 
 
         restart = new JButton("Neues Spiel");
@@ -46,7 +46,7 @@ public class WinScreen extends JFrame implements ActionListener {
         restart.addActionListener(this);
         cp.add(restart);
 
-
+        setTitle("Winning - Screen");
         setSize(500, 400);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -59,5 +59,6 @@ public class WinScreen extends JFrame implements ActionListener {
         new Control();
         dispose();
     }
+    
 
 }
