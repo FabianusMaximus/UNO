@@ -1,5 +1,7 @@
 package UNO.Kartenlogik;
 
+import java.awt.*;
+
 public class Card {
     private String color;
     private int value;
@@ -32,7 +34,7 @@ public class Card {
             name = "swap";
         } else if (value == 14 && color.equalsIgnoreCase("Black")) {
             name = "+ 4";
-        }else if(value == 69){
+        } else if (value == 69) {
             name = color;
         }
 
@@ -41,6 +43,17 @@ public class Card {
 
     public String getColor() {
         return color;
+    }
+
+    public Color getColorObjekt() {
+        return switch (color) {
+            case "Rot" -> Color.red;
+            case "Blue" -> Color.blue;
+            case "Green" -> Color.green;
+            case "Yellow" -> Color.yellow;
+            case "Black" -> Color.black;
+            default -> null;
+        };
     }
 
     public int getValue() {

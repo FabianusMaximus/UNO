@@ -50,6 +50,7 @@ public class WinScreen extends JFrame implements ActionListener {
         setSize(500, 400);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setResizable(false);
     }
 
