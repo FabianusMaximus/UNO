@@ -141,35 +141,22 @@ public class GUIGame extends JFrame {
     }
 
     private void designCards() {
-        ArrayList<Card> holdCards = control.getCardsOnHand(0);
-        updateGrid();
-        while (holdCards.size() > btn_Cards.size()) {
+        while (control.getCardsOnHand(0).size() > btn_Cards.size()) {
             btn_Cards.add(new CardButton());
         }
         for (int i = 0; i < btn_Cards.size(); i++) {
-            btn_Cards.get(i).setText(holdCards.get(i).getName());
-            btn_Cards.get(i).setForeground(Color.white);
-            int finalI = i;
+            btn_Cards.get(i).setLinkedCard(control.getCardsOnHand(0).get(i));
+            btn_Cards.get(i).designButton();
             if (Arrays.stream(btn_Cards.get(i).getActionListeners()).toList().isEmpty()) {
+                int finalI = i;
                 btn_Cards.get(i).addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        control.clickCard(btn_Cards.get(finalI).getLinkedCard());
+                        control.clickCard(btn_Cards.get(finalI).getLinkedCard(), finalI);
                     }
                 });
             }
-            switch (holdCards.get(i).getColorValue()) {
-                case 0 -> btn_Cards.get(i).setBackground(Color.red);
-                case 1 -> btn_Cards.get(i).setBackground(Color.green);
-                case 2 -> btn_Cards.get(i).setBackground(Color.blue);
-                case 3 -> {
-                    btn_Cards.get(i).setBackground(Color.yellow);
-                    btn_Cards.get(i).setForeground(Color.black);
-                }
-                case 4 -> btn_Cards.get(i).setBackground(Color.black);
-            }
             cardsOnHandPanel.add(btn_Cards.get(i));
-
         }
         this.repaint();
     }

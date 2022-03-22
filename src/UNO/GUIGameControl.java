@@ -42,14 +42,13 @@ public class GUIGameControl {
         return control.getVerlauf();
     }
 
-    public void clickCard(Card card) {
+    public void clickCard(Card card, int index) {
         if (control.getActivePlayer() == 0) {
             if (control.ueberpruefenKarte(card)) {
                 guiGame.setAusgwCardValue(card.getColorValue());
                 control.layDownCard(card, 0);
-                //TODO hier ist broke
-                //guiGame.getCardsOnHand().remove(guiGame.getBtn_Cards().get(index));
-                //guiGame.getBtn_Cards().remove(index);
+                guiGame.getCardsOnHand().remove(guiGame.getBtn_Cards().get(index));
+                guiGame.getBtn_Cards().remove(index);
                 guiGame.setZug(true);
             } else {
                 guiGame.showErrorScreen("Diese Karte kann nicht gelegt werden");
