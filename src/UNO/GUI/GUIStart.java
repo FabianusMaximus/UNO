@@ -1,6 +1,6 @@
 package UNO.GUI;
 
-import UNO.Control;
+import UNO.GUIStartControl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GUIStart extends JFrame implements ActionListener {
-    private Control control;
+    private GUIStartControl control;
     private JPanel basePanel;
     private JLabel jl_anzSpieler;
     private JLabel jl_anzDeck;
@@ -27,7 +27,7 @@ public class GUIStart extends JFrame implements ActionListener {
     private int x = 20;
     private int y = 20;
 
-    public GUIStart(Control pControl) {
+    public GUIStart(GUIStartControl pControl) {
         control = pControl;
 
         setTitle("UNO - Startscreen");

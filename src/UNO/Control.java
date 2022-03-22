@@ -10,7 +10,8 @@ import java.util.ArrayList;
 public class Control {
     private Deck deck;
     private GUIGame theGameGUI;
-    private GUIStart theStartGUI;
+    private GUIGameControl guiGameControl;
+    private GUIStartControl guiStartControl;
     private WinScreen theWinScreen;
     private Tabletop tabletop;
     private ArrayList<Bot> bot = new ArrayList<>();
@@ -25,14 +26,13 @@ public class Control {
     private ArrayList<String> verlauf = new ArrayList<>();
 
     public Control() {
-
-        theStartGUI = new GUIStart(this);
+        guiStartControl = new GUIStartControl(this);
         tabletop = new Tabletop();
 
     }
 
-    public void setDeck(int pAnz) {
-        deck = new Deck(pAnz);
+    public void setDeck(Deck deck) {
+        this.deck = deck;
     }
 
     public void setAnzSpieler(int pAnz) {
@@ -249,7 +249,7 @@ public class Control {
         deck.shuffle();
         austeilen(anzSpieler);
         sotierenKarten();
-        theGameGUI = new GUIGame(this);
+        guiGameControl = new GUIGameControl(this);
 
         //gamecycle();
 

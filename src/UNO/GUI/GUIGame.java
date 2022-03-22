@@ -1,6 +1,6 @@
 package UNO.GUI;
 
-import UNO.Control;
+import UNO.GUIGameControl;
 import UNO.Kartenlogik.Card;
 
 import javax.swing.*;
@@ -9,9 +9,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class GUIGame extends JFrame implements ActionListener {
-    private Control control;
+public class GUIGame extends JFrame {
+    private GUIGameControl control;
 
     private JPanel basePanel, playersPanel, cardsOnHandPanel, cardOnTablePanel, farbauswahlPanel;
 
@@ -32,7 +33,7 @@ public class GUIGame extends JFrame implements ActionListener {
     private int ausgCardValue = 0;
     private boolean zug = false;
 
-    public GUIGame(Control pControl) {
+    public GUIGame(GUIGameControl pControl) {
         control = pControl;
         jl_CardsOtherPlayer = new JLabel[control.getAnzSpieler()];
         setTitle("UNO - Gamescreen");
@@ -46,7 +47,12 @@ public class GUIGame extends JFrame implements ActionListener {
 
         btn_Stapel = new JButton("Aufn. Stapel");
         btn_Stapel.setBounds(390, 20, 100, 150);
-        btn_Stapel.addActionListener(this);
+        btn_Stapel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                control.clickStapel();
+            }
+        });
         basePanel.add(btn_Stapel);
 
         cardOnTablePanel = new JPanel();
@@ -84,7 +90,12 @@ public class GUIGame extends JFrame implements ActionListener {
         if (control.getActivePlayer() == 0) {
             btn_Next.setVisible(false);
         }
-        btn_Next.addActionListener(this);
+        btn_Next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                control.clickNext();
+            }
+        });
         playersPanel.add(btn_Next);
 
         btn_Uno = new JButton("UNO");
@@ -106,7 +117,13 @@ public class GUIGame extends JFrame implements ActionListener {
         for (int i = 0; i < btn_Farben.length; i++) {
             btn_Farben[i] = new JButton();
             farbauswahlPanel.add(btn_Farben[i]);
-            btn_Farben[i].addActionListener(this);
+            int finalI = i;
+            btn_Farben[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    control.clickFarbe(finalI);
+                }
+            });
         }
         btn_Farben[0].setBackground(Color.red);
         btn_Farben[1].setBackground(Color.green);
@@ -132,7 +149,15 @@ public class GUIGame extends JFrame implements ActionListener {
         for (int i = 0; i < btn_Cards.size(); i++) {
             btn_Cards.get(i).setText(holdCards.get(i).getName());
             btn_Cards.get(i).setForeground(Color.white);
-            btn_Cards.get(i).addActionListener(this);
+            int finalI = i;
+            if (Arrays.stream(btn_Cards.get(i).getActionListeners()).toList().isEmpty()) {
+                btn_Cards.get(i).addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        control.clickCard(finalI);
+                    }
+                });
+            }
             switch (holdCards.get(i).getColorValue()) {
                 case 0 -> btn_Cards.get(i).setBackground(Color.red);
                 case 1 -> btn_Cards.get(i).setBackground(Color.green);
@@ -189,7 +214,7 @@ public class GUIGame extends JFrame implements ActionListener {
         }
     }
 
-    private void updateGui() {
+    public void updateGui() {
         setVerlauf();
         designCOT();
         updateGrid();
@@ -211,77 +236,29 @@ public class GUIGame extends JFrame implements ActionListener {
 
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        int ausgCardValue = 0;
-        boolean zug = false;
-        if (isGameActive()) {
-            if (control.getActivePlayer() == 0) {
-                for (int i = 0; i < btn_Cards.size(); i++) {
-                    if (e.getSource().equals(btn_Cards.get(i))) {
-                        if (control.ueberpruefenKarte(control.getCardsOnHand(0).get(i))) {
-                            ausgCardValue = control.getCardsOnHand(0).get(i).getColorValue();
-                            control.layDownCard(control.getCardsOnHand(0).get(i), 0);
-                            cardsOnHandPanel.remove(btn_Cards.get(i));
-                            btn_Cards.remove(i);
-                            zug = true;
-                            break;
-                        }
-                    }
-                }
-                for (int i = 0; i < btn_Farben.length; i++) {
-                    if (e.getSource() == btn_Farben[i]) {
-                        String farbe;
-                        switch (i) {
-                            case 0:
-                                farbe = "Red";
-                                break;
-                            case 1:
-                                farbe = "Green";
-                                break;
-                            case 2:
-                                farbe = "Blue";
-                                break;
-                            case 3:
-                                farbe = "Yellow";
-                                break;
-                            default:
-                                farbe = "undefiniert";
-                                break;
-                        }
-                        ausgCardValue = 0;
-                        control.layDownCard(new Card(farbe, 69), 0);
-                        zug = true;
-                        auswahlFarbe(false);
-                        updateGui();
-                        break;
-                    }
-                }
-                if (e.getSource() == btn_Stapel) {
-                    control.aufnehmenKarte(0);
-                    zug = true;
-                    ausgCardValue = 0;
-                }
-                if (ausgCardValue != 4 && zug) {
-                    control.setActivePlayer();
-                }
-                zug = true;
-
-                updateGui();
-
-            } else if (e.getSource() == btn_Next) {
-                control.reactionBot();
-                updateGui();
-            } else {
-                //JOptionPane.showMessageDialog(this, "DU bist nicht an der Reihe");
-            }
-        } else {
-            control.setWinScreen();
-            dispose();
-        }
-
-
+    public void setZug(boolean zug) {
+        this.zug = zug;
     }
+
+    public void setAusgwCardValue(int value) {
+        this.ausgCardValue = value;
+    }
+
+    public JPanel getCardsOnHand() {
+        return cardsOnHandPanel;
+    }
+
+    public ArrayList<JButton> getBtn_Cards() {
+        return btn_Cards;
+    }
+
+    public void showErrorScreen(String message) {
+        JOptionPane.showMessageDialog(this,
+                message,
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
 
 }
 
