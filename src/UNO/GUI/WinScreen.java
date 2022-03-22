@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class WinScreen extends JFrame implements ActionListener {
     private Control control;
-    private JLabel lb_winner;
+    private JLabel lb_winner, imgLabel;
     private JPanel jp_Hintergrund;
     private JButton restart;
 
@@ -25,15 +25,16 @@ public class WinScreen extends JFrame implements ActionListener {
         cp.setLayout(null);
 
 
-        ImagePanel myPicture = new ImagePanel("src/img/confetti-Hintergrund.png");
-        myPicture.setBounds(0, 0, 500, 400);
-        cp.add(myPicture);
+        imgLabel = new JLabel(resizeImage(new ImageIcon("src/img/UnoCard.png"),
+                500, 400));
+        imgLabel.setBounds(0, 0, 500, 400);
+        cp.add(imgLabel);
 
         jp_Hintergrund = new JPanel();
         jp_Hintergrund.setBounds(150, 150, 200, 50);
         jp_Hintergrund.setLayout(new BorderLayout());
         jp_Hintergrund.setBackground(Color.black);
-        myPicture.add(jp_Hintergrund);
+        imgLabel.add(jp_Hintergrund);
 
         lb_winner = new JLabel(control.getGewinner().getName() + " hat gewonnen");
         lb_winner.setForeground(Color.white);
@@ -52,6 +53,11 @@ public class WinScreen extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+    }
+
+    private ImageIcon resizeImage(ImageIcon originalImage, int targetWidth, int targetHeight) {
+        return new ImageIcon(originalImage.getImage()
+                .getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT));
     }
 
 

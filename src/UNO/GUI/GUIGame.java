@@ -1,5 +1,6 @@
 package UNO.GUI;
 
+import UNO.Components.CardButton;
 import UNO.GUIGameControl;
 import UNO.Kartenlogik.Card;
 
@@ -22,7 +23,7 @@ public class GUIGame extends JFrame {
 
     private JLabel cardOnTable;
 
-    private ArrayList<JButton> btn_Cards = new ArrayList<>();
+    private ArrayList<CardButton> btn_Cards = new ArrayList<>();
 
     private JLabel[] jl_CardsOtherPlayer;
 
@@ -111,8 +112,7 @@ public class GUIGame extends JFrame {
         farbauswahlPanel = new JPanel();
         farbauswahlPanel.setBounds(10, 375, 965, 180);
         farbauswahlPanel.setLayout(new GridLayout(1, 4));
-        setVisible(false);
-        basePanel.add(farbauswahlPanel);
+
 
         for (int i = 0; i < btn_Farben.length; i++) {
             btn_Farben[i] = new JButton();
@@ -144,7 +144,7 @@ public class GUIGame extends JFrame {
         ArrayList<Card> holdCards = control.getCardsOnHand(0);
         updateGrid();
         while (holdCards.size() > btn_Cards.size()) {
-            btn_Cards.add(new JButton());
+            btn_Cards.add(new CardButton());
         }
         for (int i = 0; i < btn_Cards.size(); i++) {
             btn_Cards.get(i).setText(holdCards.get(i).getName());
@@ -154,7 +154,7 @@ public class GUIGame extends JFrame {
                 btn_Cards.get(i).addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        control.clickCard(finalI);
+                        control.clickCard(btn_Cards.get(finalI).getLinkedCard());
                     }
                 });
             }
@@ -207,11 +207,13 @@ public class GUIGame extends JFrame {
     public void auswahlFarbe(boolean auswahl) {
         if (auswahl) {
             cardsOnHandPanel.setVisible(false);
-            farbauswahlPanel.setVisible(true);
+            basePanel.add(farbauswahlPanel);
         } else {
+            basePanel.remove(farbauswahlPanel);
             cardsOnHandPanel.setVisible(true);
-            farbauswahlPanel.setVisible(false);
         }
+
+
     }
 
     public void updateGui() {
@@ -248,7 +250,7 @@ public class GUIGame extends JFrame {
         return cardsOnHandPanel;
     }
 
-    public ArrayList<JButton> getBtn_Cards() {
+    public ArrayList<CardButton> getBtn_Cards() {
         return btn_Cards;
     }
 

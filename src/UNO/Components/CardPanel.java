@@ -2,27 +2,21 @@ package UNO.Components;
 
 import UNO.Kartenlogik.Card;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class CardPanel extends JPanel {
     private Card linkedCard;
-    private JLabel topLeft;
-    private JLabel bottomRight;
-    private JLabel middle;
-
-    private BufferedImage background;
-    private JLabel imgLabel;
-
+    private JLabel topLeft, bottomRight, middle, imgLabel;
     private Color color;
     private Font standardFont;
     private Color fontColor;
 
-    public CardPanel(Card card, int width, int height) throws IOException {
+    public CardPanel(Card card) {
         super();
         linkedCard = card;
         color = card.getColorObjekt();
@@ -31,63 +25,88 @@ public class CardPanel extends JPanel {
         this.setLayout(null);
         standardFont = new Font("Arial", Font.PLAIN, 40);
         fontColor = Color.white;
-        String value = String.valueOf(card.getValue());
-
-        background = ImageIO.read(new File("src/img/UnoCard.png"));
-        imgLabel = new JLabel(resizeImage(new ImageIcon("src/img/UnoCard.png"),
-                width, height));
-        imgLabel.setBounds(0, 0, width, height);
-        this.add(imgLabel);
-        topLeft = new JLabel(value);
-        bottomRight = new JLabel(value);
-        middle = new JLabel(value);
-        designtCard();
     }
 
     public void designtCard() {
-        int width = getWidth();
-        int height = getHeight();
-        topLeft.setSize(new Dimension(this.getWidth(), this.getWidth()));
-        topLeft.setBounds(20, 20, width / 10, width / 10);
+        String value = String.valueOf(linkedCard.getValue());
+
+        topLeft = new JLabel(value);
+        topLeft.setSize(this.getWidth() / 10, this.getHeight() / 10);
+        topLeft.setLocation(20, 20);
         topLeft.setFont(standardFont);
         topLeft.setForeground(fontColor);
-        imgLabel.add(topLeft);
+        this.add(topLeft);
 
-        middle.setSize(width / 2, height / 2);
-        middle.setLocation(width / 2 - middle.getWidth() / 2, height / 2 - middle.getHeight() / 2);
-        middle.setFont(standardFont);
-        middle.setForeground(Color.blue);
-        imgLabel.add(middle);
+        middle = new JLabel(value);
+        middle.setSize(this.getWidth() / 2, this.getHeight() / 2);
+        middle.setLocation(this.getWidth() / 2 - middle.getWidth() / 2, this.getHeight() / 2 - middle.getHeight() / 2);
+        middle.setFont(new Font("Arial", Font.PLAIN, 100));
+        middle.setVerticalAlignment(SwingConstants.CENTER);
+        middle.setHorizontalAlignment(SwingConstants.CENTER);
+        middle.setForeground(linkedCard.getColorObjekt());
+        if (imgLabel != null) imgLabel.add(middle);
 
-        bottomRight.setSize(new Dimension(this.getWidth(), this.getWidth()));
-        bottomRight.setBounds(width - 20, height - 20, width / 10, height / 10);
+        bottomRight = new JLabel(value);
+        bottomRight.setSize(this.getWidth() / 10, this.getHeight() / 10);
+        bottomRight.setLocation(this.getWidth() - bottomRight.getWidth() - 20, this.getHeight() - bottomRight.getHeight() - 20);
         bottomRight.setFont(standardFont);
         bottomRight.setForeground(fontColor);
-        imgLabel.add(bottomRight);
+        this.add(bottomRight);
+    }
 
+    private void addContentToPanel() {
+        try {
+            imgLabel = new JLabel(resizeImage(new ImageIcon("src/img/UnoCard.png"),
+                    this.getWidth(), this.getHeight()));
+            imgLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
+            this.add(imgLabel);
+        } catch (IllegalArgumentException e) {
+            System.out.println("bild kann nicht resized werden");
+        }
+        designtCard();
+        this.revalidate();
         this.repaint();
     }
 
-    private ImageIcon resizeImage(ImageIcon originalImage, int targetWidth, int targetHeight){
+    public void updateGui() {
+        for (Component component : this.getComponents()) {
+            System.out.println("Penis");
+        }
+    }
+
+    private ImageIcon resizeImage(ImageIcon originalImage, int targetWidth, int targetHeight) {
         return new ImageIcon(originalImage.getImage()
                 .getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT));
     }
 
 
     public static void main(String[] args) throws IOException {
+        int width = 1920;
+        int height = 1080;
+
         JFrame mainFrame = new JFrame();
-        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        Container c = mainFrame.getContentPane();
-        int width = 300;
-        int height = 500;
         mainFrame.setSize(width, height);
-        mainFrame.setLayout(null);
-        CardPanel hans = new CardPanel(new Card("Blue", 5), width, height);
-        hans.setBounds(0, 0, width, height);
+        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        mainFrame.setLayout(new GridLayout(1, 5));
+        ArrayList<CardPanel> cardPanels = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            cardPanels.add(new CardPanel(new Card("Blue", 5)));
+            mainFrame.add(cardPanels.get(i));
+        }
 
-        c.add(hans);
 
+
+        mainFrame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                for (CardPanel cardPanel : cardPanels) {
+                    cardPanel.addContentToPanel();
+                }
+            }
+        });
         mainFrame.setVisible(true);
+
+
     }
 }
 
