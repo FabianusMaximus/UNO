@@ -1,7 +1,6 @@
 package UNO;
 
 import UNO.GUI.GUIGame;
-import UNO.GUI.GUIStart;
 import UNO.GUI.WinScreen;
 import UNO.Kartenlogik.*;
 
@@ -119,7 +118,7 @@ public class Control {
     public void aufnehmenKarte(int pSpieler) {
         spieler.get(pSpieler).addCardToHand(deck.getDeck().get(0));
         deck.getDeck().remove(0);
-        sotierenKarten();
+        sortierenKarten();
         if (deck.getDeck().isEmpty()) {
             deck = new Deck(1);
             deck.shuffle();
@@ -189,9 +188,9 @@ public class Control {
         }
     }
 
-    private void sotierenKarten() {
-        for (int i = 0; i < spieler.size(); i++) {
-            spieler.get(i).sortieren();
+    private void sortierenKarten() {
+        for (Spieler value : spieler) {
+            value.sortieren();
         }
     }
 
@@ -248,7 +247,7 @@ public class Control {
     public void start() {
         deck.shuffle();
         austeilen(anzSpieler);
-        sotierenKarten();
+        sortierenKarten();
         guiGameControl = new GUIGameControl(this);
 
         //gamecycle();

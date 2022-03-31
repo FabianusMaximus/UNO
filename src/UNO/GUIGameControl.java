@@ -43,6 +43,7 @@ public class GUIGameControl {
     }
 
     public void clickCard(Card card, int index) {
+        System.out.println("Ausgewählte Karte: " + card.getName());
         if (control.getActivePlayer() == 0) {
             if (control.ueberpruefenKarte(card)) {
                 guiGame.setAusgwCardValue(card.getColorValue());
