@@ -27,7 +27,6 @@ public class Control {
     public Control() {
         guiStartControl = new GUIStartControl(this);
         tabletop = new Tabletop();
-
     }
 
     public void setDeck(Deck deck) {
@@ -166,9 +165,7 @@ public class Control {
                 if (anzSpieler == 2) {
                     nextPlayer();
                 } else {
-                    if (!richtung) richtung = true;
-                    else richtung = false;
-                    break;
+                    richtung = !richtung;
                 }
 
             case 12:
@@ -236,6 +233,10 @@ public class Control {
 
     public void setAusgwCard(Card pCard) {
         ausgwCard = pCard;
+    }
+
+    public void setTheGameGUI(GUIGame guiGame) {
+        this.theGameGUI = guiGame;
     }
 
     public void setWinScreen() {

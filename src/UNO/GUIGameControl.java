@@ -12,6 +12,7 @@ public class GUIGameControl {
     public GUIGameControl(Control control) {
         this.control = control;
         this.guiGame = new GUIGame(this);
+        control.setTheGameGUI(guiGame);
     }
 
     public int getAnzSpieler() {
@@ -51,6 +52,7 @@ public class GUIGameControl {
                 guiGame.getCardsOnHand().remove(guiGame.getBtn_Cards().get(index));
                 guiGame.getBtn_Cards().remove(index);
                 guiGame.setZug(true);
+                control.setActivePlayer();
             } else {
                 guiGame.showErrorScreen("Diese Karte kann nicht gelegt werden");
             }

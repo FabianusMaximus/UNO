@@ -2,7 +2,6 @@ package UNO.GUI;
 
 import UNO.Components.CardButton;
 import UNO.GUIGameControl;
-import UNO.Kartenlogik.Card;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -10,10 +9,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class GUIGame extends JFrame {
-    private GUIGameControl control;
+    private GUIGameControl guiGameControl;
 
     private JPanel basePanel, playersPanel, cardsOnHandPanel, cardOnTablePanel, farbauswahlPanel;
 
@@ -35,8 +33,8 @@ public class GUIGame extends JFrame {
     private boolean zug = false;
 
     public GUIGame(GUIGameControl pControl) {
-        control = pControl;
-        jl_CardsOtherPlayer = new JLabel[control.getAnzSpieler()];
+        guiGameControl = pControl;
+        jl_CardsOtherPlayer = new JLabel[guiGameControl.getAnzSpieler()];
         setTitle("UNO - Gamescreen");
         Container cp = getContentPane();
         cp.setLayout(new BorderLayout());
@@ -51,7 +49,7 @@ public class GUIGame extends JFrame {
         btn_Stapel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                control.clickStapel();
+                guiGameControl.clickStapel();
             }
         });
         basePanel.add(btn_Stapel);
@@ -61,7 +59,7 @@ public class GUIGame extends JFrame {
         cardOnTablePanel.setLayout(new BorderLayout());
         basePanel.add(cardOnTablePanel);
 
-        cardOnTable = new JLabel(control.getCardOnTable().getName(), SwingConstants.CENTER);
+        cardOnTable = new JLabel(guiGameControl.getCardOnTable().getName(), SwingConstants.CENTER);
         cardOnTable.setForeground(Color.white);
         cardOnTablePanel.add(cardOnTable, BorderLayout.CENTER);
 
@@ -78,23 +76,23 @@ public class GUIGame extends JFrame {
         playersPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
         basePanel.add(playersPanel);
 
-        jl_CardsOtherPlayer = new JLabel[control.getAnzSpieler() - 1];
+        jl_CardsOtherPlayer = new JLabel[guiGameControl.getAnzSpieler() - 1];
         for (int i = 0; i < jl_CardsOtherPlayer.length; i++) {
             jl_CardsOtherPlayer[i] = new JLabel();
-            jl_CardsOtherPlayer[i].setText(control.getName(i + 1) + ": " +
-                    control.getCardsOnHand(i + 1).size());
+            jl_CardsOtherPlayer[i].setText(guiGameControl.getName(i + 1) + ": " +
+                    guiGameControl.getCardsOnHand(i + 1).size());
             jl_CardsOtherPlayer[i].setBounds(20 + (100), 200, 200, 200);
             playersPanel.add(jl_CardsOtherPlayer[i]);
         }
 
         btn_Next = new JButton("weiter");
-        if (control.getActivePlayer() == 0) {
+        if (guiGameControl.getActivePlayer() == 0) {
             btn_Next.setVisible(false);
         }
         btn_Next.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                control.clickNext();
+                guiGameControl.clickNext();
             }
         });
         playersPanel.add(btn_Next);
@@ -121,7 +119,7 @@ public class GUIGame extends JFrame {
             btn_Farben[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    control.clickFarbe(finalI);
+                    guiGameControl.clickFarbe(finalI);
                 }
             });
         }
@@ -141,36 +139,43 @@ public class GUIGame extends JFrame {
     }
 
     private void designCards() {
-        while (control.getCardsOnHand(0).size() > btn_Cards.size()) {
+        while (guiGameControl.getCardsOnHand(0).size() > btn_Cards.size()) {
             btn_Cards.add(new CardButton());
         }
-        for (int i = 0; i < btn_Cards.size(); i++) {
-            btn_Cards.get(i).setLinkedCard(control.getCardsOnHand(0).get(i));
+        for (int i = 0; i < guiGameControl.getCardsOnHand(0).size(); i++) {
+            btn_Cards.get(i).setLinkedCard(guiGameControl.getCardsOnHand(0).get(i));
             btn_Cards.get(i).designButton();
-            if (Arrays.stream(btn_Cards.get(i).getActionListeners()).toList().isEmpty()) {
-                int finalI = i;
-                btn_Cards.get(i).addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        control.clickCard(btn_Cards.get(finalI).getLinkedCard(), finalI);
-                    }
-                });
-            }
+            System.out.print(btn_Cards.get(i).getLinkedCard().getName() + ", ");
+            reassignActionListener(i);
             cardsOnHandPanel.add(btn_Cards.get(i));
         }
+        System.out.println();
         this.repaint();
     }
 
+    public void reassignActionListener(int index) {
+        for (ActionListener a : btn_Cards.get(index).getActionListeners()) {
+            btn_Cards.get(index).removeActionListener(a);
+        }
+        btn_Cards.get(index).addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guiGameControl.clickCard(btn_Cards.get(index).getLinkedCard(), index);
+            }
+        });
+
+    }
+
     private void updateGrid() {
-        grid.setColumns(control.getCardsOnHand(0).size());
+        grid.setColumns(guiGameControl.getCardsOnHand(0).size());
         cardsOnHandPanel.setLayout(grid);
         this.revalidate();
     }
 
     private void designCOT() {
-        cardOnTable.setText(control.getCardOnTable().getName());
+        cardOnTable.setText(guiGameControl.getCardOnTable().getName());
         cardOnTable.setForeground(Color.white);
-        switch (control.getCardOnTable().getColorValue()) {
+        switch (guiGameControl.getCardOnTable().getColorValue()) {
             case 0 -> cardOnTablePanel.setBackground(Color.red);
             case 1 -> cardOnTablePanel.setBackground(Color.green);
             case 2 -> cardOnTablePanel.setBackground(Color.blue);
@@ -184,10 +189,10 @@ public class GUIGame extends JFrame {
 
     private void updateOtherPlayers() {
         for (int i = 0; i < jl_CardsOtherPlayer.length; i++) {
-            jl_CardsOtherPlayer[i].setText(control.getName(i + 1) + ": " +
-                    control.getCardsOnHand(i + 1).size());
+            jl_CardsOtherPlayer[i].setText(guiGameControl.getName(i + 1) + ": " +
+                    guiGameControl.getCardsOnHand(i + 1).size());
         }
-        btn_Next.setVisible(control.getActivePlayer() != 0);
+        btn_Next.setVisible(guiGameControl.getActivePlayer() != 0);
         this.repaint();
     }
 
@@ -213,13 +218,13 @@ public class GUIGame extends JFrame {
     }
 
     private boolean isGameActive() {
-        return control.isGameActive();
+        return guiGameControl.isGameActive();
     }
 
     private void setVerlauf() {
         StringBuilder hold = new StringBuilder("--------------------Verlauf--------------------" + "\n");
-        for (int i = 0; i < control.getVerlauf().size(); i++) {
-            hold.append(control.getVerlauf().get(i));
+        for (int i = 0; i < guiGameControl.getVerlauf().size(); i++) {
+            hold.append(guiGameControl.getVerlauf().get(i));
         }
         verlauf.setText(hold.toString());
 
