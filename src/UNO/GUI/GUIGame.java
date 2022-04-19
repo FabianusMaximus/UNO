@@ -5,6 +5,7 @@ import UNO.GUIGameControl;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 public class GUIGame extends JFrame {
     private GUIGameControl guiGameControl;
 
-    private JPanel basePanel, playersPanel, cardsOnHandPanel, cardOnTablePanel, farbauswahlPanel;
+    private JPanel basePanel, playersPanel, otherPlayerPanel, cardsOnHandPanel, cardOnTablePanel, farbauswahlPanel;
 
     private JButton btn_Stapel, btn_Uno, btn_Next;
 
@@ -30,7 +31,6 @@ public class GUIGame extends JFrame {
     private GridLayout grid = new GridLayout(1, 7, 0, 5);
 
     private int ausgCardValue = 0;
-    private boolean zug = false;
 
     public GUIGame(GUIGameControl pControl) {
         guiGameControl = pControl;
@@ -41,7 +41,6 @@ public class GUIGame extends JFrame {
 
         basePanel = new JPanel();
         basePanel.setLayout(null);
-        //basePanel.setBackground(Color.green);
         cp.add(basePanel, BorderLayout.CENTER);
 
         btn_Stapel = new JButton("Aufn. Stapel");
@@ -73,19 +72,26 @@ public class GUIGame extends JFrame {
 
         playersPanel = new JPanel();
         playersPanel.setBounds(10, 187, 965, 180);
-        playersPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        playersPanel.setLayout(new GridLayout(1, 2));
         basePanel.add(playersPanel);
+
+        otherPlayerPanel = new JPanel();
+        otherPlayerPanel.setLayout(new GridLayout(guiGameControl.getAnzSpieler() - 1, 1));
+        playersPanel.add(otherPlayerPanel);
 
         jl_CardsOtherPlayer = new JLabel[guiGameControl.getAnzSpieler() - 1];
         for (int i = 0; i < jl_CardsOtherPlayer.length; i++) {
             jl_CardsOtherPlayer[i] = new JLabel();
             jl_CardsOtherPlayer[i].setText(guiGameControl.getName(i + 1) + ": " +
                     guiGameControl.getCardsOnHand(i + 1).size());
-            jl_CardsOtherPlayer[i].setBounds(20 + (100), 200, 200, 200);
-            playersPanel.add(jl_CardsOtherPlayer[i]);
+            jl_CardsOtherPlayer[i].setFont(new Font("Arial", Font.PLAIN, 20));
+            jl_CardsOtherPlayer[i].setVerticalAlignment(SwingConstants.CENTER);
+            jl_CardsOtherPlayer[i].setHorizontalAlignment(SwingConstants.CENTER);
+            otherPlayerPanel.add(jl_CardsOtherPlayer[i]);
         }
 
         btn_Next = new JButton("weiter");
+        btn_Next.setFont(new Font("Arial", Font.PLAIN, 20));
         if (guiGameControl.getActivePlayer() == 0) {
             btn_Next.setVisible(false);
         }
@@ -228,10 +234,6 @@ public class GUIGame extends JFrame {
         }
         verlauf.setText(hold.toString());
 
-    }
-
-    public void setZug(boolean zug) {
-        this.zug = zug;
     }
 
     public void setAusgwCardValue(int value) {

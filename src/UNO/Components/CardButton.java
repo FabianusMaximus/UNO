@@ -8,9 +8,10 @@ import java.awt.*;
 public class CardButton extends JButton {
     private Card linkedCard;
 
-    public CardButton(){
+    public CardButton() {
 
     }
+
     public CardButton(Card card) {
         this.linkedCard = card;
 
@@ -37,7 +38,7 @@ public class CardButton extends JButton {
         this.linkedCard = linkedCard;
     }
 
-    public void designButton(){
+    public void designButton() {
         this.setText(linkedCard.getName());
         this.setForeground(Color.white);
 

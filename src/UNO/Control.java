@@ -49,7 +49,10 @@ public class Control {
         difficulty = pDifficulty;
     }
 
-    public void setActivePlayer() {
+    /**
+     * Setzt das Attribut der Klasse control auf den nächsten Spieler, damit der nächste Zug gemacht werden kann
+     */
+    public void continueToNextPlayer() {
         activePlayer = nextPlayer();
     }
 
@@ -124,20 +127,13 @@ public class Control {
         }
     }
 
-
     private int nextPlayer() {
         int i = activePlayer;
-        if (richtung) {
-            i++;
-        } else {
-            i--;
-        }
-        if (i >= spieler.size() && i > 0) {
-            i = 0;
-        } else if (i < 0) {
-            i = spieler.size() - 1;
+        if (richtung) i++;
+        else i--;
+        if (i >= spieler.size() && i > 0) i = 0;
+        else if (i < 0) i = spieler.size() - 1;
 
-        }
         return i;
     }
 
@@ -163,10 +159,11 @@ public class Control {
                 break;
             case 11:
                 if (anzSpieler == 2) {
-                    nextPlayer();
+                    activePlayer = nextPlayer();
                 } else {
                     richtung = !richtung;
                 }
+                break;
 
             case 12:
                 activePlayer = nextPlayer();

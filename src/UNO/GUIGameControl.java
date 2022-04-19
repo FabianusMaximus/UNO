@@ -51,8 +51,7 @@ public class GUIGameControl {
                 control.layDownCard(card, 0);
                 guiGame.getCardsOnHand().remove(guiGame.getBtn_Cards().get(index));
                 guiGame.getBtn_Cards().remove(index);
-                guiGame.setZug(true);
-                control.setActivePlayer();
+                control.continueToNextPlayer();
             } else {
                 guiGame.showErrorScreen("Diese Karte kann nicht gelegt werden");
             }
@@ -61,10 +60,10 @@ public class GUIGameControl {
     }
 
     public void clickStapel() {
-        control.aufnehmenKarte(0);
-        guiGame.setZug(true);
-        guiGame.setAusgwCardValue(0);
-
+        if (control.getActivePlayer() == 0){
+            control.aufnehmenKarte(0);
+            control.continueToNextPlayer();
+        }
         guiGame.updateGui();
     }
 
@@ -83,7 +82,6 @@ public class GUIGameControl {
         };
         guiGame.setAusgwCardValue(0);
         control.layDownCard(new Card(farbe, 69), 0);
-        guiGame.setZug(true);
         guiGame.auswahlFarbe(false);
         guiGame.updateGui();
     }
