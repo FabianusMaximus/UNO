@@ -1,5 +1,6 @@
 package UNO;
 
+import UNO.GUI.BotHand;
 import UNO.GUI.GUIGame;
 import UNO.Kartenlogik.Card;
 
@@ -13,6 +14,7 @@ public class GUIGameControl {
         this.control = control;
         this.guiGame = new GUIGame(this);
         control.setTheGameGUI(guiGame);
+
     }
 
     public int getAnzSpieler() {

@@ -21,6 +21,10 @@ public class Spieler {
         return hand;
     }
 
+    public int getAnzCards() {
+        return hand.size();
+    }
+
     public void addCardToHand(Card pCard) {
         hand.add(pCard);
     }

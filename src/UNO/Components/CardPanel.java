@@ -68,12 +68,6 @@ public class CardPanel extends JPanel {
         this.repaint();
     }
 
-    public void updateGui() {
-        for (Component component : this.getComponents()) {
-            System.out.println("Penis");
-        }
-    }
-
     private ImageIcon resizeImage(ImageIcon originalImage, int targetWidth, int targetHeight) {
         return new ImageIcon(originalImage.getImage()
                 .getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT));

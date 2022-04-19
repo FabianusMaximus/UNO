@@ -1,5 +1,6 @@
 package UNO;
 
+import UNO.GUI.BotHand;
 import UNO.GUI.GUIGame;
 import UNO.GUI.WinScreen;
 import UNO.Kartenlogik.*;
@@ -72,6 +73,10 @@ public class Control {
         return activePlayer;
     }
 
+    public Spieler getPlayer(int index) {
+        return spieler.get(index);
+    }
+
     public Spieler getGewinner() {
         return gewinner;
     }
@@ -137,6 +142,10 @@ public class Control {
         return i;
     }
 
+    public Spieler getNextPlayer() {
+        return spieler.get(nextPlayer());
+    }
+
     private void auswaehlenFarbe() {
         if (activePlayer == 0 && theGameGUI != null) {
             theGameGUI.auswahlFarbe(true);
@@ -189,6 +198,11 @@ public class Control {
     }
 
     public void reactionBot() {
+        System.out.print("Karten von Bot 1: ");
+        for (Card card : spieler.get(1).getHand()) {
+            System.out.print(card.getName() + ", ");
+        }
+        System.out.println("");
         bot.get(activePlayer - 1).reaction();
         if (bot.get(activePlayer - 1).kannSpielen()) {
             layDownCard(ausgwCard, activePlayer);
@@ -234,12 +248,6 @@ public class Control {
 
     public void setTheGameGUI(GUIGame guiGame) {
         this.theGameGUI = guiGame;
-    }
-
-    public void setWinScreen() {
-        if (theWinScreen == null) {
-            theWinScreen = new WinScreen(this);
-        }
     }
 
     public void start() {
