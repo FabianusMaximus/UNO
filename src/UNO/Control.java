@@ -200,7 +200,7 @@ public class Control {
     public void reactionBot() {
         System.out.print("Karten von Bot 1: ");
         for (Card card : spieler.get(1).getHand()) {
-            System.out.print(card.getName() + ", ");
+            System.out.print(card.getColor() + " " + card.getName() + ", ");
         }
         System.out.println("");
         bot.get(activePlayer - 1).reaction();
