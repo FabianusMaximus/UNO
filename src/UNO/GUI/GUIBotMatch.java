@@ -134,7 +134,7 @@ public class GUIBotMatch extends JFrame {
 
         areaFont = new Font("Arial", Font.PLAIN, jp_settings.getWidth() / 30);
 
-        jta_Verlauf = new JTextArea("-----------------Verlauf des Spiels-----------------");
+        jta_Verlauf = new JTextArea("-----------------Verlauf des Spiels-----------------\n");
         jta_Verlauf.setFont(areaFont);
         jta_Verlauf.setEditable(false);
         JScrollPane scroll = new JScrollPane(jta_Verlauf);
@@ -145,7 +145,7 @@ public class GUIBotMatch extends JFrame {
         jp_statistics = new JPanel();
         jp_statistics.setSize((int) (jp_game.getWidth() * 0.85), (int) (jp_game.getHeight() * 0.3));
         jp_statistics.setLocation(SwingCalculation.centerX(jp_game, jp_statistics), (int) (jp_game.getHeight() * 0.6));
-        jp_statistics.setLayout(new GridLayout(2, 2,5,5));
+        jp_statistics.setLayout(new GridLayout(2, 2, 5, 5));
         jp_statistics.setBorder(new LineBorder(Color.red));
         jp_game.add(jp_statistics);
 
@@ -181,7 +181,7 @@ public class GUIBotMatch extends JFrame {
     }
 
     public void appendToVerlauf(String text) {
-        jta_Verlauf.append(text);
+        jta_Verlauf.append(text + "\n");
     }
 
     public int getValueSlider(int index) {

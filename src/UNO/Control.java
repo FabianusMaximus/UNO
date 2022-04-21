@@ -14,7 +14,6 @@ public class Control {
     private BotMatchControl bmControl;
     private WinScreen theWinScreen;
     private Tabletop tabletop;
-    private ArrayList<Bot> bot = new ArrayList<>();
     private ArrayList<Spieler> spieler = new ArrayList<>();
     private boolean richtung;
     private int activePlayer;
@@ -95,6 +94,19 @@ public class Control {
         }
     }
 
+    private void layDownCardBM(Card pCard, int pSpieler) {
+        tabletop.layCardOnTable(pCard);
+        bmControl.appendToVerlauf(spieler.get(pSpieler).getName() + ": " + pCard.getColor() + pCard.getName());
+        if (pCard.isActionCard()) {
+            performAction(pCard);
+        }
+        if (tabletop.getCardOnTable() == null) {
+            deck.getDeck().remove(pCard);
+        } else {
+            spieler.get(pSpieler).getHand().remove(pCard);
+        }
+    }
+
     public void addToVerlauf(Card pCard, int pSpieler) {
         verlauf.add(spieler.get(pSpieler).getName() + ": " + pCard.getName() + "\n");
         if (verlauf.size() > 5) {
@@ -153,7 +165,7 @@ public class Control {
         } else if (theGameGUI == null) {
             layDownCard(new Card("black", 69), 0);
         } else {
-            layDownCard(new Card(bot.get(activePlayer - 1).auswaehlenFarbe(), 69), activePlayer);
+            layDownCard(new Card(((Bot) (spieler.get(activePlayer))).auswaehlenFarbe(), 69), activePlayer);
         }
     }
 
@@ -204,9 +216,20 @@ public class Control {
             System.out.print(card.getColor() + " " + card.getName() + ", ");
         }
         System.out.println("");
-        bot.get(activePlayer - 1).reaction();
-        if (bot.get(activePlayer - 1).kannSpielen()) {
+        ((Bot) spieler.get(activePlayer)).reaction();
+        if (((Bot) spieler.get(activePlayer)).kannSpielen()) {
             layDownCard(ausgwCard, activePlayer);
+        } else {
+            aufnehmenKarte(activePlayer);
+        }
+
+        activePlayer = nextPlayer();
+    }
+
+    private void reactionBotBM() {
+        ((Bot) spieler.get(activePlayer)).reaction();
+        if (((Bot) spieler.get(activePlayer)).kannSpielen()) {
+            layDownCardBM(ausgwCard, activePlayer);
         } else {
             aufnehmenKarte(activePlayer);
         }
@@ -226,20 +249,20 @@ public class Control {
         return active;
     }
 
-    private void erstellenBot(int difficulty) {
-        for (int i = 0; i < anzSpieler; i++) {
-            spieler.add(new Spieler(i));
-            bot.add(new Bot(i, this, difficulty));
+    private void erstellenSpieler() {
+        spieler.add(new Spieler(name));
+        for (int i = 1; i < anzSpieler; i++) {
+            spieler.add(new Bot(i, this, difficulty));
         }
+    }
+
+    private void erstellenBot(int number, int difficulty) {
+        spieler.add(new Bot(number, this, difficulty));
+
     }
 
 
     private void austeilen() {
-        spieler.add(new Spieler(name));
-        for (int i = 1; i < anzSpieler; i++) {
-            spieler.add(new Spieler(i));
-            bot.add(new Bot(i, this, difficulty));
-        }
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < anzSpieler; j++) {
                 spieler.get(j).addCardToHand(deck.getDeck().get(i + j));
@@ -248,10 +271,6 @@ public class Control {
         }
         layDownCard(deck.getDeck().get(0), 0);
         verlauf.remove(0);
-    }
-
-    private void austeilenBotMatch() {
-
     }
 
     public void goToBotMatch() {
@@ -268,18 +287,33 @@ public class Control {
 
     public void start() {
         deck.shuffle();
+        erstellenSpieler();
         austeilen();
         sortierenKarten();
         guiGameControl = new GUIGameControl(this);
-
-        //gamecycle();
     }
 
     public void startBotMatch() {
         deck = new Deck(1);
         deck.shuffle();
-        erstellenBot(1);
+        for (int i = 0; i < anzSpieler; i++) {
+            erstellenBot(i, bmControl.getDifficulty(i)-1);
+        }
         austeilen();
         sortierenKarten();
+        botGamecycle();
+    }
+
+    public void botGamecycle() {
+        do {
+            reactionBotBM();
+        } while (checkHasCards());
+    }
+
+    private boolean checkHasCards() {
+        for (Spieler spieler : spieler) {
+            return !(spieler.getAnzCards() == 0);
+        }
+        return true;
     }
 }
