@@ -1,6 +1,5 @@
 package UNO;
 
-import UNO.GUI.BotHand;
 import UNO.GUI.GUIGame;
 import UNO.GUI.WinScreen;
 import UNO.Kartenlogik.*;
@@ -12,6 +11,7 @@ public class Control {
     private GUIGame theGameGUI;
     private GUIGameControl guiGameControl;
     private GUIStartControl guiStartControl;
+    private BotMatchControl bmControl;
     private WinScreen theWinScreen;
     private Tabletop tabletop;
     private ArrayList<Bot> bot = new ArrayList<>();
@@ -25,8 +25,9 @@ public class Control {
     private Spieler gewinner;
     private ArrayList<String> verlauf = new ArrayList<>();
 
+    //TODO wenn der Bot 2 mal dran ist, stuckt er
     public Control() {
-        guiStartControl = new GUIStartControl(this);
+        guiStartControl = new GUIStartControl(this, bmControl);
         tabletop = new Tabletop();
     }
 
@@ -225,21 +226,36 @@ public class Control {
         return active;
     }
 
-
-    private void austeilen(int pAnzSpieler) {
-        spieler.add(new Spieler(name));
-        for (int i = 1; i < pAnzSpieler; i++) {
+    private void erstellenBot(int difficulty) {
+        for (int i = 0; i < anzSpieler; i++) {
             spieler.add(new Spieler(i));
-            bot.add(new Bot(spieler.get(i).getName(), spieler.get(i), this, difficulty));
+            bot.add(new Bot(i, this, difficulty));
+        }
+    }
+
+
+    private void austeilen() {
+        spieler.add(new Spieler(name));
+        for (int i = 1; i < anzSpieler; i++) {
+            spieler.add(new Spieler(i));
+            bot.add(new Bot(i, this, difficulty));
         }
         for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < pAnzSpieler; j++) {
+            for (int j = 0; j < anzSpieler; j++) {
                 spieler.get(j).addCardToHand(deck.getDeck().get(i + j));
                 deck.getDeck().remove(i + j);
             }
         }
         layDownCard(deck.getDeck().get(0), 0);
         verlauf.remove(0);
+    }
+
+    private void austeilenBotMatch() {
+
+    }
+
+    public void goToBotMatch() {
+        bmControl = new BotMatchControl(this);
     }
 
     public void setAusgwCard(Card pCard) {
@@ -252,12 +268,18 @@ public class Control {
 
     public void start() {
         deck.shuffle();
-        austeilen(anzSpieler);
+        austeilen();
         sortierenKarten();
         guiGameControl = new GUIGameControl(this);
 
         //gamecycle();
+    }
 
-
+    public void startBotMatch() {
+        deck = new Deck(1);
+        deck.shuffle();
+        erstellenBot(1);
+        austeilen();
+        sortierenKarten();
     }
 }

@@ -3,9 +3,9 @@ package UNO.Kartenlogik;
 import java.util.ArrayList;
 
 public class Spieler {
-    private String name;
-    private ArrayList<Card> hand = new ArrayList<>();
-    private int nr;
+    protected String name;
+    protected ArrayList<Card> hand = new ArrayList<>();
+    protected int nr;
     private boolean uno = false;
 
     public Spieler(int pNr) {

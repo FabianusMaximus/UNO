@@ -1,5 +1,6 @@
 package UNO.GUI;
 
+import UNO.BotMatchControl;
 import UNO.GUIStartControl;
 
 import javax.swing.*;
@@ -8,27 +9,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GUIStart extends JFrame implements ActionListener {
-    private GUIStartControl control;
+    private GUIStartControl guiStartControl;
+    private BotMatchControl BMControl;
     private JPanel basePanel;
-    private JLabel jl_anzSpieler;
-    private JLabel jl_anzDeck;
-    private JLabel jl_name;
-    private JLabel jl_difficulty;
-    private JTextField tf_Spieler;
-    private JTextField tf_Deck;
-    private JTextField tf_Name;
-    private JTextField tf_difficulty;
-    private JButton btn_start;
+    private JLabel jl_anzSpieler, jl_anzDeck,jl_name, jl_difficulty;
+    private JTextField tf_Spieler, tf_Deck;
+    private JTextField tf_Name, tf_difficulty;
+    private JButton btn_start, btn_BotMatch;
 
     private JOptionPane dialog;
 
     private int width = 300;
-    private int height = 320;
+    private int height = 360;
     private int x = 20;
     private int y = 20;
 
     public GUIStart(GUIStartControl pControl) {
-        control = pControl;
+        guiStartControl = pControl;
 
         setTitle("UNO - Startscreen");
         Container cp = getContentPane();
@@ -77,6 +74,17 @@ public class GUIStart extends JFrame implements ActionListener {
         btn_start.addActionListener(this);
         basePanel.add(btn_start);
 
+        btn_BotMatch = new JButton("Bot Match");
+        btn_BotMatch.setBounds(40,270,150,40);
+        btn_BotMatch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guiStartControl.goToBotMatch();
+                dispose();
+            }
+        });
+        basePanel.add(btn_BotMatch);
+
         setSize(width, height);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -87,12 +95,12 @@ public class GUIStart extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
             try{
-                control.setAnzSpieler(Integer.parseInt(tf_Spieler.getText()));
-                control.setDeck(Integer.parseInt(tf_Deck.getText()));
-                control.setName(tf_Name.getText());
-                control.setDifficulty(Integer.parseInt(tf_difficulty.getText())-1);
+                guiStartControl.setAnzSpieler(Integer.parseInt(tf_Spieler.getText()));
+                guiStartControl.setDeck(Integer.parseInt(tf_Deck.getText()));
+                guiStartControl.setName(tf_Name.getText());
+                guiStartControl.setDifficulty(Integer.parseInt(tf_difficulty.getText())-1);
                 dispose();
-                control.start();
+                guiStartControl.start();
             }catch (NumberFormatException exception){
                 JOptionPane.showMessageDialog(this,"Alle Felder müssen korrekt ausgefüllt sein");
             }

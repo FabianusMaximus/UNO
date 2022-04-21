@@ -6,17 +6,14 @@ import java.awt.*;
 import java.util.ArrayList;
 
 
-public class Bot {
-    private String name;
-    private Spieler spieler;
+public class Bot extends Spieler{
     private Control control;
     private boolean spielen;
     private int difficulty;
     private int bestColor;
 
-    public Bot(String pName, Spieler pSpieler, Control pControl, int pDifficulty) {
-        name = pName;
-        spieler = pSpieler;
+    public Bot(int nummer, Control pControl, int pDifficulty) {
+        super(nummer);
         control = pControl;
         difficulty = pDifficulty;
     }
@@ -25,7 +22,7 @@ public class Bot {
      * wählt die erste Krate aus, die er legen kann
      */
     private void berechnenSpielzugEasy() {
-        ArrayList<Card> holdCards = spieler.getHand();
+        ArrayList<Card> holdCards = this.getHand();
         for (Card holdCard : holdCards) {
             if (control.ueberpruefenKarte(holdCard)) {
                 control.setAusgwCard(holdCard);
@@ -41,7 +38,7 @@ public class Bot {
      * Schaut bei einem Farbwechsel, welche Farbe er am meisten besitzt
      */
     private void berechnenSpielzugMedium() {
-        ArrayList<Card> holdCards = spieler.getHand();
+        ArrayList<Card> holdCards = this.getHand();
         ArrayList<Card> validCards = selectValidCards(holdCards);
         int[] anzColor = countAnzColors(holdCards);
         if (validCards.size() != 0) {
@@ -50,12 +47,12 @@ public class Bot {
             spielen = true;
         } else spielen = false;
 
-        bestColor = getHighestNumber(anzColor);
+        bestColor = getIndexHighestNumber(anzColor);
     }
 
     private void berechnenSpielzugHard() {
         int anzSpieler = control.getAnzSpieler();
-        ArrayList<Card> holdCards = spieler.getHand();
+        ArrayList<Card> holdCards = this.getHand();
         int anzKarten = holdCards.size();
         ArrayList<Card> validCards = selectValidCards(holdCards);
         int[] anzColor = countAnzColors(holdCards);
@@ -98,7 +95,7 @@ public class Bot {
             spielen = true;
         } else spielen = false;
 
-        bestColor = getHighestNumber(anzColor);
+        bestColor = getIndexHighestNumber(anzColor);
 
         //TODO versucht die Aktionskarten zusammen abzulegen
     }
@@ -118,17 +115,25 @@ public class Bot {
     }
 
     /**
-     * Gibt die höchste Zahl eines Arrays zurück
+     * Gibt den Index der höchsten Zahl des Arrays zurück
      *
      * @param numbers Zahlen die verglichen werden sollen
-     * @return höste Zahl
+     * @return index höchste Zahl
      */
-    private int getHighestNumber(int[] numbers) {
+    private int getIndexHighestNumber(int[] numbers) {
         int comp = 0;
-        for (int i : numbers) {
-            if (i > comp) comp = i;
+        int index = 0;
+        for (int number : numbers) {
+            if (number > comp) {
+                comp = number;
+            }
         }
-        return comp;
+        for (int i = 0; i <numbers.length ; i++) {
+            if (comp == numbers[i]){
+                return i;
+            }
+        }
+        return index;
     }
 
     /**
