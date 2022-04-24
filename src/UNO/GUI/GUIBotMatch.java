@@ -15,7 +15,7 @@ public class GUIBotMatch extends JFrame {
     private Container cp;
     private JPanel jp_settings, jp_sliders, jp_game, jp_statistics;
 
-    private JLabel jl_Header, jl_anzBots;
+    private JLabel jl_Header, jl_anzBots, jl_anzIteration;
 
     private JLabel[] jl_Bots, jl_statBots;
     private JSlider[] js_difficulty;
@@ -27,6 +27,8 @@ public class GUIBotMatch extends JFrame {
     private JTextArea jta_Verlauf;
 
     private JTextField[] tf_stats;
+
+    private JTextField tf_anzIteration;
     private int width, height;
 
     private Font settingsFont, areaFont;
@@ -74,7 +76,7 @@ public class GUIBotMatch extends JFrame {
                 jp_settings.getWidth() / 2 - jp_sliders.getWidth() / 2,
                 (int) (jp_settings.getHeight() - jp_settings.getHeight() * 0.85)
         );
-        jp_sliders.setLayout(new GridLayout(5, 2, 5, 5));
+        jp_sliders.setLayout(new GridLayout(6, 2, 5, 5));
         jp_sliders.setBorder(new LineBorder(Color.red));
         jp_settings.add(jp_sliders);
 
@@ -109,7 +111,6 @@ public class GUIBotMatch extends JFrame {
         jp_sliders.add(jl_anzBots);
 
         js_anzBots = new JSlider();
-        js_anzBots = new JSlider();
         js_anzBots.setMinimum(2);
         js_anzBots.setMaximum(4);
         js_anzBots.setMajorTickSpacing(1);
@@ -119,6 +120,17 @@ public class GUIBotMatch extends JFrame {
         js_anzBots.setPaintLabels(true);
         js_anzBots.setPaintTicks(true);
         jp_sliders.add(js_anzBots);
+
+        jl_anzIteration = new JLabel("Anzahl Iterationen: ");
+        jl_anzIteration.setFont(settingsFont);
+        jl_anzIteration.setHorizontalAlignment(SwingConstants.CENTER);
+        jl_anzIteration.setVerticalAlignment(SwingConstants.CENTER);
+        jp_sliders.add(jl_anzIteration);
+
+        tf_anzIteration = new JTextField();
+        tf_anzIteration.setFont(settingsFont);
+        tf_anzIteration.setHorizontalAlignment(SwingConstants.CENTER);
+        jp_sliders.add(tf_anzIteration);
 
         btn_simulate = new JButton("Simulate");
         btn_simulate.setSize((int) (jp_settings.getWidth() * 0.75), 50);
@@ -156,6 +168,7 @@ public class GUIBotMatch extends JFrame {
             tf_stats[i] = new JTextField();
             tf_stats[i].setEditable(false);
             tf_stats[i].setFont(settingsFont);
+            tf_stats[i].setHorizontalAlignment(SwingConstants.CENTER);
 
             jl_statBots[i] = new JLabel("Runden von Bot " + i + " gewonnen:");
             jl_statBots[i].setFont(settingsFont);
@@ -176,12 +189,17 @@ public class GUIBotMatch extends JFrame {
         setVisible(true);
     }
 
-    public void setButtonEnabled(boolean enabled) {
-        btn_simulate.setEnabled(enabled);
-    }
-
     public void appendToVerlauf(String text) {
         jta_Verlauf.append(text + "\n");
+    }
+
+    public void updateGewonnen(int index, int gewonnen) {
+        tf_stats[index].setText(Integer.toString(gewonnen));
+        tf_stats[index].setFont(settingsFont);
+    }
+
+    public void setButtonEnabled(boolean enabled) {
+        btn_simulate.setEnabled(enabled);
     }
 
     public int getValueSlider(int index) {
@@ -190,5 +208,13 @@ public class GUIBotMatch extends JFrame {
 
     public int getAnzBots() {
         return js_anzBots.getValue();
+    }
+
+    public int getAnzIterationen() {
+        try {
+            return Integer.parseInt(tf_anzIteration.getText());
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 }

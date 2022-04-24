@@ -47,11 +47,11 @@ public class Card {
 
     public Color getColorObjekt() {
         return switch (color) {
-            case "Rot" -> Color.red;
-            case "Blue" -> Color.blue;
-            case "Green" -> Color.green;
-            case "Yellow" -> Color.yellow;
-            case "Black" -> Color.black;
+            case "Red", "red" -> Color.red;
+            case "Blue", "blue" -> Color.blue;
+            case "Green", "green" -> Color.green;
+            case "Yellow", "yellow" -> Color.yellow;
+            case "Black", "black" -> Color.black;
             default -> null;
         };
     }

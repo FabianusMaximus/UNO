@@ -14,9 +14,11 @@ public class BotMatchControl {
 
     public void clickSimulate() {
         guiBotMatch.setButtonEnabled(false);
-        control.setAnzSpieler(guiBotMatch.getAnzBots());
-        control.startBotMatch();
-
+        for (int i = 0; i < guiBotMatch.getAnzIterationen(); i++) {
+            control.setAnzSpieler(guiBotMatch.getAnzBots());
+            control.startBotMatch();
+        }
+        guiBotMatch.setButtonEnabled(true);
     }
 
     public int getDifficulty(int index) {
@@ -25,5 +27,9 @@ public class BotMatchControl {
 
     public void appendToVerlauf(String text) {
         guiBotMatch.appendToVerlauf(text);
+    }
+
+    public void updateGewonnen(int bot, int gewonnen) {
+        guiBotMatch.updateGewonnen(bot, gewonnen);
     }
 }

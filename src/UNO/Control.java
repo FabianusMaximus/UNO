@@ -96,7 +96,7 @@ public class Control {
 
     private void layDownCardBM(Card pCard, int pSpieler) {
         tabletop.layCardOnTable(pCard);
-        bmControl.appendToVerlauf(spieler.get(pSpieler).getName() + ": " + pCard.getColor() + pCard.getName());
+        bmControl.appendToVerlauf(spieler.get(pSpieler).getName() + ": " + pCard.getColor() + " " + pCard.getName());
         if (pCard.isActionCard()) {
             performAction(pCard);
         }
@@ -127,7 +127,7 @@ public class Control {
                 tabletop.getCardOnTable().getColorValue() == 4) {
             validMove = true;
         } else {
-            if (activePlayer == 0) {
+            if (!(spieler.get(activePlayer) instanceof Bot)) {
                 System.out.println("Diese Karte kann nicht gewählt werden");
             }
 
@@ -160,7 +160,7 @@ public class Control {
     }
 
     private void auswaehlenFarbe() {
-        if (activePlayer == 0 && theGameGUI != null) {
+        if (!(spieler.get(activePlayer) instanceof Bot) && theGameGUI != null) {
             theGameGUI.auswahlFarbe(true);
         } else if (theGameGUI == null) {
             layDownCard(new Card("black", 69), 0);
@@ -211,11 +211,6 @@ public class Control {
     }
 
     public void reactionBot() {
-        System.out.print("Karten von Bot 1: ");
-        for (Card card : spieler.get(1).getHand()) {
-            System.out.print(card.getColor() + " " + card.getName() + ", ");
-        }
-        System.out.println("");
         ((Bot) spieler.get(activePlayer)).reaction();
         if (((Bot) spieler.get(activePlayer)).kannSpielen()) {
             layDownCard(ausgwCard, activePlayer);
@@ -233,20 +228,17 @@ public class Control {
         } else {
             aufnehmenKarte(activePlayer);
         }
-
         activePlayer = nextPlayer();
     }
 
     public boolean isGameActive() {
-        boolean active = true;
-        for (int i = 0; i < spieler.size(); i++) {
-            if (spieler.get(i).getHand().isEmpty()) {
-                gewinner = spieler.get(i);
-                active = false;
-                break;
+        for (Spieler value : spieler) {
+            if (value.getHand().isEmpty()) {
+                gewinner = value;
+                return false;
             }
         }
-        return active;
+        return true;
     }
 
     private void erstellenSpieler() {
@@ -259,6 +251,11 @@ public class Control {
     private void erstellenBot(int number, int difficulty) {
         spieler.add(new Bot(number, this, difficulty));
 
+    }
+
+    private void updateConfig(int index, int difficulty) {
+        //TODO machen, dass man noch mal simulieren kann und alle Einstellungen anpassen kann
+        ((Bot) spieler.get(index)).setDifficulty(difficulty);
     }
 
 
@@ -296,8 +293,14 @@ public class Control {
     public void startBotMatch() {
         deck = new Deck(1);
         deck.shuffle();
-        for (int i = 0; i < anzSpieler; i++) {
-            erstellenBot(i, bmControl.getDifficulty(i)-1);
+        if (spieler.isEmpty()) {
+            for (int i = 0; i < anzSpieler; i++) {
+                erstellenBot(i, bmControl.getDifficulty(i) - 1);
+            }
+        } else {
+            for (int i = 0; i < anzSpieler; i++) {
+                updateConfig(i, bmControl.getDifficulty(i) - 1);
+            }
         }
         austeilen();
         sortierenKarten();
@@ -305,15 +308,27 @@ public class Control {
     }
 
     public void botGamecycle() {
-        do {
+        while (checkHasCards()) {
             reactionBotBM();
-        } while (checkHasCards());
+        }
+        bmControl.appendToVerlauf("----------Spiel Vorbei----------");
+        Bot holdBot = (Bot) spieler.get(getIndexWinner());
+        bmControl.appendToVerlauf("Bot " + getIndexWinner() + " hat gewonnen!");
+        holdBot.erhoehenRundenGewonnen();
+        bmControl.updateGewonnen(getIndexWinner(), holdBot.getRundenGewonnen());
     }
 
     private boolean checkHasCards() {
         for (Spieler spieler : spieler) {
-            return !(spieler.getAnzCards() == 0);
+            if (spieler.getHand().isEmpty()) return false;
         }
         return true;
+    }
+
+    public int getIndexWinner() {
+        for (int i = 0; i < spieler.size(); i++) {
+            if (spieler.get(i).getAnzCards() == 0) return i;
+        }
+        return 14;
     }
 }

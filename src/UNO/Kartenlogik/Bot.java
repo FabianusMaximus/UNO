@@ -6,11 +6,10 @@ import java.awt.*;
 import java.util.ArrayList;
 
 
-public class Bot extends Spieler{
+public class Bot extends Spieler {
     private Control control;
     private boolean spielen;
-    private int difficulty;
-    private int bestColor;
+    private int difficulty, bestColor, rundenGewonnen;
 
     public Bot(int nummer, Control pControl, int pDifficulty) {
         super(nummer);
@@ -23,14 +22,11 @@ public class Bot extends Spieler{
      */
     private void berechnenSpielzugEasy() {
         ArrayList<Card> holdCards = this.getHand();
-        for (Card holdCard : holdCards) {
-            if (control.ueberpruefenKarte(holdCard)) {
-                control.setAusgwCard(holdCard);
-                spielen = true;
-            } else {
-                spielen = false;
-            }
-        }
+        ArrayList<Card> validCards = selectValidCards(holdCards);
+        if (validCards.size() != 0) {
+            control.setAusgwCard(validCards.get(0));
+            spielen = true;
+        } else spielen = false;
     }
 
     /**
@@ -86,9 +82,9 @@ public class Bot extends Spieler{
             //Schaut, ob er mehr als 4 Karten einer Farbe hat und überlegt sich dann, ob er wechseln soll
             if (hasMoreThan4OfOneColor(anzColor)) {
                 if (hasPlusFour && control.getNextPlayer().getAnzCards() > 3) {
-                    control.setAusgwCard(selectCard(validCards, 14, 4));
+                    control.setAusgwCard(selectCard(validCards, 14));
                 } else if (hasSwap) {
-                    control.setAusgwCard(selectCard(validCards, 13, 4));
+                    control.setAusgwCard(selectCard(validCards, 13));
                 }
             }
 
@@ -128,8 +124,8 @@ public class Bot extends Spieler{
                 comp = number;
             }
         }
-        for (int i = 0; i <numbers.length ; i++) {
-            if (comp == numbers[i]){
+        for (int i = 0; i < numbers.length; i++) {
+            if (comp == numbers[i]) {
                 return i;
             }
         }
@@ -144,14 +140,13 @@ public class Bot extends Spieler{
      * 0 = Rot, 1 = Grün, 2 = Blau, 3 = Gelb, 4 = Schwarz
      */
     private int[] countAnzColors(ArrayList<Card> cards) {
-        int[] anzColor = new int[5];
+        int[] anzColor = new int[4];
         for (Card card : cards) {
             switch (card.getColorValue()) {
                 case 0 -> anzColor[0]++;
                 case 1 -> anzColor[1]++;
                 case 2 -> anzColor[2]++;
                 case 3 -> anzColor[3]++;
-                case 4 -> anzColor[4]++;
             }
         }
         return anzColor;
@@ -212,7 +207,7 @@ public class Bot extends Spieler{
      */
     private boolean hasCard(ArrayList<Card> cards, int value) {
         for (Card card : cards) {
-            return card.getValue() == value;
+            if (card.getValue() == value)return true;
         }
         return false;
     }
@@ -229,6 +224,7 @@ public class Bot extends Spieler{
         for (Card card : cards) {
             if (card.getValue() == value) return card;
         }
+        System.out.println("habe Karte zwar gesucht, aber nicht gefunden: 1");
         return null;
     }
 
@@ -236,7 +232,8 @@ public class Bot extends Spieler{
         for (Card card : cards) {
             if (card.getColorObjekt() == color) return card;
         }
-        return null;
+        System.out.println("habe Karte zwar gesucht, aber nicht gefunden: 2");
+        throw new RuntimeException();
     }
 
     /**
@@ -251,6 +248,7 @@ public class Bot extends Spieler{
         for (Card card : cards) {
             if (card.getValue() == value && card.getColorValue() == color) return card;
         }
+        System.out.println("habe Karte zwar gesucht, aber nicht gefunden: 3" + value + " " + color);
         return null;
     }
 
@@ -267,8 +265,17 @@ public class Bot extends Spieler{
             case 1 -> berechnenSpielzugMedium();
             case 2 -> berechnenSpielzugHard();
         }
-
     }
 
+    public void erhoehenRundenGewonnen() {
+        rundenGewonnen++;
+    }
 
+    public int getRundenGewonnen() {
+        return rundenGewonnen;
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
+    }
 }

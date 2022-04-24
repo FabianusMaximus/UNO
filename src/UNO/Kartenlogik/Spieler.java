@@ -82,4 +82,19 @@ public class Spieler {
     public int getNrOfCards() {
         return hand.size();
     }
+
+    public void printHand() {
+        for (Card card : hand) {
+            System.out.print(card.getColor() + " " + card.getName() + ", ");
+        }
+        System.out.println();
+    }
+
+    public void extendetPrint() {
+        for (Card card : hand) {
+            System.out.print(card.getColor() + " " + card.getName() + "Value: " + card.getValue() + "Color Objekt" +
+                    card.getColorObjekt());
+        }
+        System.out.println();
+    }
 }
