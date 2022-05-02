@@ -9,7 +9,8 @@ import java.util.ArrayList;
 public class Bot extends Spieler {
     private Control control;
     private boolean spielen;
-    private int difficulty, bestColor, rundenGewonnen;
+    private int difficulty, bestColor, rundenGewonnen, farbwechselFarbeMax, farbwechselFarbeMin, nextPlayerAvoidance,
+            plusTwoWhen, farbwechselWhen;
 
     public Bot(int nummer, Control pControl, int pDifficulty) {
         super(nummer);
@@ -47,6 +48,13 @@ public class Bot extends Spieler {
     }
 
     private void berechnenSpielzugHard() {
+        //Entscheidungsvariablen
+        farbwechselFarbeMax = 5;
+        farbwechselFarbeMin = 1;
+        nextPlayerAvoidance = 1;
+        plusTwoWhen = 3;
+        farbwechselWhen = 3;
+
         int anzSpieler = control.getAnzSpieler();
         ArrayList<Card> holdCards = this.getHand();
         int anzKarten = holdCards.size();
@@ -66,22 +74,24 @@ public class Bot extends Spieler {
                 control.setAusgwCard(selectCard(validCards, control.getCardOnTable().getColorObjekt()));
             }
             //Legt keine Farbwechselkarte, wenn er weniger als 4 aber mehr als eine Karte auf der Hand hat (Bitch-Finish)
-            if (holdCards.size() <= 4 && holdCards.size() > 1) {
+            if (holdCards.size() <= farbwechselFarbeMax && holdCards.size() > farbwechselFarbeMin) {
                 removeCardFromList(validCards, 13);
                 removeCardFromList(validCards, 14);
+                hasSwap = false;
+                hasPlusFour = false;
             }
             //Wenn der nachfolgende Spieler nur noch eine Karte wird versucht dessen Zug zu vermeiden
-            if (hasAvoidingCard && control.getNextPlayer().getAnzCards() == 1) {
+            if (hasAvoidingCard && control.getNextPlayer().getAnzCards() == nextPlayerAvoidance) {
                 if (hasCard(validCards, 11)) control.setAusgwCard(selectCard(validCards, 11));
                 else control.setAusgwCard(selectCard(validCards, 12));
             }
             //Schaut, ob der nächste Spieler weniger als 3 Karten hat und ob er eine +2 legen kann
-            if (hasPlusTwo && control.getNextPlayer().getAnzCards() > 3) {
+            if (hasPlusTwo && control.getNextPlayer().getAnzCards() > plusTwoWhen) {
                 control.setAusgwCard(selectCard(validCards, 10));
             }
             //Schaut, ob er mehr als 4 Karten einer Farbe hat und überlegt sich dann, ob er wechseln soll
             if (hasMoreThan4OfOneColor(anzColor)) {
-                if (hasPlusFour && control.getNextPlayer().getAnzCards() > 3) {
+                if (hasPlusFour && control.getNextPlayer().getAnzCards() > farbwechselWhen) {
                     control.setAusgwCard(selectCard(validCards, 14));
                 } else if (hasSwap) {
                     control.setAusgwCard(selectCard(validCards, 13));
@@ -207,7 +217,7 @@ public class Bot extends Spieler {
      */
     private boolean hasCard(ArrayList<Card> cards, int value) {
         for (Card card : cards) {
-            if (card.getValue() == value)return true;
+            if (card.getValue() == value) return true;
         }
         return false;
     }
@@ -224,7 +234,7 @@ public class Bot extends Spieler {
         for (Card card : cards) {
             if (card.getValue() == value) return card;
         }
-        System.out.println("habe Karte zwar gesucht, aber nicht gefunden: 1");
+        System.out.println("habe Karte zwar gesucht, aber nicht gefunden: 1 " + "value: " + value);
         return null;
     }
 
@@ -259,6 +269,11 @@ public class Bot extends Spieler {
         return false;
     }
 
+    private boolean hasStackableActionCards(ArrayList<Card> cards){
+        //penis
+        return false;
+    }
+
     public void reaction() {
         switch (difficulty) {
             case 0 -> berechnenSpielzugEasy();
@@ -277,5 +292,25 @@ public class Bot extends Spieler {
 
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public int getFarbwechselFarbeMax() {
+        return farbwechselFarbeMax;
+    }
+
+    public int getFarbwechselFarbeMin() {
+        return farbwechselFarbeMin;
+    }
+
+    public int getNextPlayerAvoidance() {
+        return nextPlayerAvoidance;
+    }
+
+    public int getPlusTwoWhen() {
+        return plusTwoWhen;
+    }
+
+    public int getFarbwechselWhen() {
+        return farbwechselWhen;
     }
 }

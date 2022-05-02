@@ -2,6 +2,7 @@ package UNO;
 
 import UNO.GUI.GUIBotMatch;
 import UNO.Kartenlogik.Deck;
+import util.Tracking;
 
 public class BotMatchControl {
     private Control control;
@@ -31,5 +32,12 @@ public class BotMatchControl {
 
     public void updateGewonnen(int bot, int gewonnen) {
         guiBotMatch.updateGewonnen(bot, gewonnen);
+    }
+
+    public void trackStats(int farbwechselFarbeMax, int farbwechselFarbeMin, int nextPlayerAvoidance,
+                           int plusTwoWhen, int farbwechselWhen, int gewonnenBot0, int gewonnenBot1) {
+        Tracking theTracking = new Tracking();
+        theTracking.trackStats(farbwechselFarbeMax, farbwechselFarbeMin, nextPlayerAvoidance,
+                plusTwoWhen, farbwechselWhen, gewonnenBot0, gewonnenBot1);
     }
 }
