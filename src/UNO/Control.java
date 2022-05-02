@@ -25,7 +25,6 @@ public class Control {
     private Spieler gewinner;
     private ArrayList<String> verlauf = new ArrayList<>();
 
-    //TODO wenn der Bot 2 mal dran ist, stuckt er
     public Control() {
         guiStartControl = new GUIStartControl(this, bmControl);
         tabletop = new Tabletop();
@@ -303,9 +302,16 @@ public class Control {
                 updateConfig(i, bmControl.getDifficulty(i) - 1);
             }
         }
+        updateWeights();
         austeilen();
         sortierenKarten();
         botGamecycle();
+    }
+
+    private void updateWeights(){
+        for (Spieler spieler: spieler) {
+            ((Bot) spieler).updateWeights(new Tracking().getWeights());
+        }
     }
 
     public void botGamecycle() {
@@ -331,5 +337,9 @@ public class Control {
             if (spieler.get(i).getAnzCards() == 0) return i;
         }
         return 14;
+    }
+
+    public Spieler getSpieler(int index) {
+        return spieler.get(index);
     }
 }
