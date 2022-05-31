@@ -1,2 +1,0 @@
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-farbwechselFarbeMax : 0, farbwechselFarbeMin: 0, nextPlayerAvoidance: 0, plusTwoWhen: 0, farbwechselWhen: 0, gewonnenBot0: 0, gewonnenBot1: 1, Verhältnis: 0.0

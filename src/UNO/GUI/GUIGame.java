@@ -2,6 +2,7 @@ package UNO.GUI;
 
 import UNO.Components.CardButton;
 import UNO.GUIGameControl;
+import util.SwingCalculation;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -12,13 +13,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class GUIGame extends JFrame {
+    ColorSelectionScreen css;
     private GUIGameControl guiGameControl;
 
-    private JPanel basePanel, playersPanel, otherPlayerPanel, cardsOnHandPanel, cardOnTablePanel, farbauswahlPanel;
+    private JPanel basePanel, playersPanel, otherPlayerPanel, cardsOnHandPanel, cardOnTablePanel;
 
     private JButton btn_Stapel, btn_Uno, btn_Next;
 
-    private JButton[] btn_Farben = new JButton[4];
 
     private JLabel cardOnTable;
 
@@ -36,6 +37,7 @@ public class GUIGame extends JFrame {
         guiGameControl = pControl;
         jl_CardsOtherPlayer = new JLabel[guiGameControl.getAnzSpieler()];
         setTitle("UNO - Gamescreen");
+        setSize(1000, 563);
         Container cp = getContentPane();
         cp.setLayout(new BorderLayout());
 
@@ -113,31 +115,9 @@ public class GUIGame extends JFrame {
         cardsOnHandPanel.setLayout(grid);
         basePanel.add(cardsOnHandPanel);
 
-        farbauswahlPanel = new JPanel();
-        farbauswahlPanel.setBounds(10, 375, 965, 180);
-        farbauswahlPanel.setLayout(new GridLayout(1, 4));
-
-
-        for (int i = 0; i < btn_Farben.length; i++) {
-            btn_Farben[i] = new JButton();
-            farbauswahlPanel.add(btn_Farben[i]);
-            int finalI = i;
-            btn_Farben[i].addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    guiGameControl.clickFarbe(finalI);
-                }
-            });
-        }
-        btn_Farben[0].setBackground(Color.red);
-        btn_Farben[1].setBackground(Color.green);
-        btn_Farben[2].setBackground(Color.blue);
-        btn_Farben[3].setBackground(Color.yellow);
-
 
         designCards();
 
-        setSize(1000, 563);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
@@ -203,15 +183,19 @@ public class GUIGame extends JFrame {
     }
 
     public void auswahlFarbe(boolean auswahl) {
-        if (auswahl) {
-            cardsOnHandPanel.setVisible(false);
-            basePanel.add(farbauswahlPanel);
-        } else {
-            basePanel.remove(farbauswahlPanel);
-            cardsOnHandPanel.setVisible(true);
-        }
+        btn_Next.setEnabled(false);
+        if (auswahl) openColorFrame();
+        else closeColorFrame();
+        css.toFront();
+    }
 
+    private void openColorFrame() {
+        css = new ColorSelectionScreen(guiGameControl);
+    }
 
+    private void closeColorFrame(){
+        css.dispose();
+        btn_Next.setEnabled(true);
     }
 
     public void updateGui() {
@@ -249,10 +233,7 @@ public class GUIGame extends JFrame {
     }
 
     public void showErrorScreen(String message) {
-        JOptionPane.showMessageDialog(this,
-                message,
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
 

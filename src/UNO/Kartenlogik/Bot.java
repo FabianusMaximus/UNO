@@ -48,6 +48,9 @@ public class Bot extends Spieler {
     }
 
     private void berechnenSpielzugHard() {
+        //TODO Farbe wichtiger als Zahl
+        //TODO verhindern dass der Gegner mehr Karten einer Farbe legen kann, eher Farbe wechseln
+        //TODO
         //Entscheidungsvariablen
         /*
         farbwechselFarbeMax = 5;

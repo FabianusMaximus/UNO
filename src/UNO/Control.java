@@ -3,7 +3,6 @@ package UNO;
 import UNO.GUI.GUIGame;
 import UNO.GUI.WinScreen;
 import UNO.Kartenlogik.*;
-import util.Tracking;
 
 import java.util.ArrayList;
 
@@ -160,6 +159,7 @@ public class Control {
     }
 
     private void auswaehlenFarbe() {
+
         if (!(spieler.get(activePlayer) instanceof Bot) && theGameGUI != null) {
             theGameGUI.auswahlFarbe(true);
         } else if (theGameGUI == null) {
@@ -302,16 +302,9 @@ public class Control {
                 updateConfig(i, bmControl.getDifficulty(i) - 1);
             }
         }
-        updateWeights();
         austeilen();
         sortierenKarten();
         botGamecycle();
-    }
-
-    private void updateWeights(){
-        for (Spieler spieler: spieler) {
-            ((Bot) spieler).updateWeights(new Tracking().getWeights());
-        }
     }
 
     public void botGamecycle() {
