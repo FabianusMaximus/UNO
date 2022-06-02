@@ -29,7 +29,7 @@ public class GUIGame extends JFrame {
 
     private JTextArea verlauf;
 
-    private GridLayout grid = new GridLayout(1, 7, 0, 5);
+    private GridLayout grid = new GridLayout(1, 7, 2, 5);
 
     private int ausgCardValue = 0;
 
@@ -45,7 +45,7 @@ public class GUIGame extends JFrame {
         basePanel.setLayout(null);
         cp.add(basePanel, BorderLayout.CENTER);
 
-        this.setJMenuBar((new MenuBar()));
+        this.setJMenuBar((new MenuBar(guiGameControl)));
 
         btn_Stapel = new JButton("Aufn. Stapel");
         btn_Stapel.setBounds(390, 20, 100, 150);
@@ -133,11 +133,9 @@ public class GUIGame extends JFrame {
         for (int i = 0; i < guiGameControl.getCardsOnHand(0).size(); i++) {
             btn_Cards.get(i).setLinkedCard(guiGameControl.getCardsOnHand(0).get(i));
             btn_Cards.get(i).designButton();
-            System.out.print(btn_Cards.get(i).getLinkedCard().getName() + ", ");
             reassignActionListener(i);
             cardsOnHandPanel.add(btn_Cards.get(i));
         }
-        System.out.println();
         this.repaint();
     }
 

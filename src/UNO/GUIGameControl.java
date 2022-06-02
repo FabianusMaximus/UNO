@@ -10,6 +10,8 @@ public class GUIGameControl {
     private Control control;
     private GUIGame guiGame;
 
+    private ArrayList<BotHand> botHands = new ArrayList<>();
+
     public GUIGameControl(Control control) {
         this.control = control;
         this.guiGame = new GUIGame(this);
@@ -62,7 +64,7 @@ public class GUIGameControl {
     }
 
     public void clickStapel() {
-        if (control.getActivePlayer() == 0){
+        if (control.getActivePlayer() == 0) {
             control.aufnehmenKarte(0);
             control.continueToNextPlayer();
         }
@@ -72,6 +74,7 @@ public class GUIGameControl {
     public void clickNext() {
         control.reactionBot();
         guiGame.updateGui();
+        updateBotHands();
     }
 
     public void clickFarbe(int index) {
@@ -86,5 +89,13 @@ public class GUIGameControl {
         control.layDownCard(new Card(farbe, 69), 0);
         guiGame.auswahlFarbe(false);
         guiGame.updateGui();
+    }
+
+    public void clickMenuItem(int index) {
+        botHands.add(new BotHand(control, index));
+    }
+
+    public void updateBotHands() {
+        botHands.forEach(BotHand::updateBotHand);
     }
 }

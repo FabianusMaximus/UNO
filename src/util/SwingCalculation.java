@@ -35,4 +35,12 @@ public class SwingCalculation {
     public static Dimension twoThirdsRectangle(Component comp) {
         return new Dimension(comp.getWidth(), comp.getHeight() / 3 * 2);
     }
+
+    public static Dimension getTwoThirdsScreen() {
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        int w = (int) d.getWidth();
+        int h = (int) d.getHeight();
+
+        return new Dimension((int) (w * 0.6), (int) (h * 0.6));
+    }
 }

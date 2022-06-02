@@ -1,7 +1,11 @@
 package UNO.GUI;
 
+import UNO.Control;
+import UNO.GUIGameControl;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class MenuBar extends JMenuBar {
@@ -13,7 +17,7 @@ public class MenuBar extends JMenuBar {
 
     private JCheckBoxMenuItem cbMenuItem;
 
-    public MenuBar() {
+    public MenuBar(GUIGameControl guiGameControl) {
 
         //Build the first menu.
         menu = new JMenu("Game");
@@ -36,15 +40,19 @@ public class MenuBar extends JMenuBar {
         submenu = new JMenu("Cheat Options");
         submenu.setMnemonic(KeyEvent.VK_S);
 
-        menuItem = new JMenuItem("Hand von Bot 1");
-        submenu.add(menuItem);
-
-        menuItem = new JMenuItem("Hand von Bot 2");
-        submenu.add(menuItem);
-
-        menuItem = new JMenuItem("Hand von bot 3");
-        submenu.add(menuItem);
-
+        //items in submenu
+        for (int i = 0; i < 3; i++) {
+            menuItem = new JMenuItem("Hand von Bot " + (i + 1));
+            int finalI = i;
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Action listener ist da");
+                    guiGameControl.clickMenuItem(finalI);
+                }
+            });
+            submenu.add(menuItem);
+        }
 
         menu.add(submenu);
     }
