@@ -46,7 +46,7 @@ public class GUIBotMatch extends JFrame {
         jp_settings.setSize(width / 3, height);
         jp_settings.setLocation(0, 0);
         jp_settings.setLayout(null);
-        jp_settings.setBorder(new LineBorder(Color.green));
+        //jp_settings.setBorder(new LineBorder(Color.green));
         cp.add(jp_settings);
 
         settingsFont = new Font("Arial", Font.PLAIN, jp_settings.getWidth() / 30);
@@ -55,7 +55,7 @@ public class GUIBotMatch extends JFrame {
         jp_game.setSize(width - width / 3, height);
         jp_game.setLocation(width / 3, 0);
         jp_game.setLayout(null);
-        jp_game.setBorder(new LineBorder(Color.blue));
+        //jp_game.setBorder(new LineBorder(Color.blue));
         cp.add(jp_game);
 
         jl_Header = new JLabel("Uno Bot Match");
@@ -64,7 +64,7 @@ public class GUIBotMatch extends JFrame {
         jl_Header.setFont(new Font("Arial", Font.PLAIN, (int) (jl_Header.getHeight() / 1.2)));
         jl_Header.setVerticalAlignment(SwingConstants.CENTER);
         jl_Header.setHorizontalAlignment(SwingConstants.CENTER);
-        jl_Header.setBorder(new LineBorder(Color.red));
+        //jl_Header.setBorder(new LineBorder(Color.red));
         jp_settings.add(jl_Header);
 
         jp_sliders = new JPanel();
@@ -73,11 +73,11 @@ public class GUIBotMatch extends JFrame {
                 (int) (jp_settings.getHeight() * 0.75)
         );
         jp_sliders.setLocation(
-                jp_settings.getWidth() / 2 - jp_sliders.getWidth() / 2,
-                (int) (jp_settings.getHeight() - jp_settings.getHeight() * 0.85)
+                SwingCalculation.centerX(jp_settings,jp_sliders),
+                (int) (jp_settings.getHeight() - jp_settings.getHeight() * 0.90)
         );
         jp_sliders.setLayout(new GridLayout(6, 2, 5, 5));
-        jp_sliders.setBorder(new LineBorder(Color.red));
+        //jp_sliders.setBorder(new LineBorder(Color.red));
         jp_settings.add(jp_sliders);
 
         Font settingsFont = new Font("Arial", Font.PLAIN, jp_settings.getWidth() / 30);
@@ -134,7 +134,7 @@ public class GUIBotMatch extends JFrame {
 
         btn_simulate = new JButton("Simulate");
         btn_simulate.setSize((int) (jp_settings.getWidth() * 0.75), 50);
-        btn_simulate.setLocation(SwingCalculation.centerX(jp_settings, btn_simulate), (int) (height * 0.91));
+        btn_simulate.setLocation(SwingCalculation.centerX(jp_settings, btn_simulate), (int) (height * 0.85));
         btn_simulate.setFont(settingsFont);
         btn_simulate.addActionListener(new ActionListener() {
             @Override
@@ -158,7 +158,7 @@ public class GUIBotMatch extends JFrame {
         jp_statistics.setSize((int) (jp_game.getWidth() * 0.85), (int) (jp_game.getHeight() * 0.3));
         jp_statistics.setLocation(SwingCalculation.centerX(jp_game, jp_statistics), (int) (jp_game.getHeight() * 0.6));
         jp_statistics.setLayout(new GridLayout(2, 2, 5, 5));
-        jp_statistics.setBorder(new LineBorder(Color.red));
+        //jp_statistics.setBorder(new LineBorder(Color.red));
         jp_game.add(jp_statistics);
 
         tf_stats = new JTextField[4];

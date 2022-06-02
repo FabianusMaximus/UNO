@@ -45,6 +45,8 @@ public class GUIGame extends JFrame {
         basePanel.setLayout(null);
         cp.add(basePanel, BorderLayout.CENTER);
 
+        this.setJMenuBar((new MenuBar()));
+
         btn_Stapel = new JButton("Aufn. Stapel");
         btn_Stapel.setBounds(390, 20, 100, 150);
         btn_Stapel.addActionListener(new ActionListener() {
@@ -193,7 +195,7 @@ public class GUIGame extends JFrame {
         css = new ColorSelectionScreen(guiGameControl);
     }
 
-    private void closeColorFrame(){
+    private void closeColorFrame() {
         css.dispose();
         btn_Next.setEnabled(true);
     }
