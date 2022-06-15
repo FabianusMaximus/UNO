@@ -1,12 +1,9 @@
 package UNO.GUI;
 
 import UNO.Components.CardButton;
-import UNO.GUIGameControl;
-import util.SwingCalculation;
+import UNO.Control.GUIGameControl;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

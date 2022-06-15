@@ -1,4 +1,4 @@
-package UNO;
+package UNO.Control;
 
 import UNO.GUI.BotHand;
 import UNO.GUI.GUIGame;

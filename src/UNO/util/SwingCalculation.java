@@ -1,6 +1,5 @@
-package util;
+package UNO.util;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class SwingCalculation {

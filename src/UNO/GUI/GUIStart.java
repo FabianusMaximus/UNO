@@ -1,7 +1,7 @@
 package UNO.GUI;
 
-import UNO.BotMatchControl;
-import UNO.GUIStartControl;
+import UNO.Control.BotMatchControl;
+import UNO.Control.GUIStartControl;
 
 import javax.swing.*;
 import java.awt.*;

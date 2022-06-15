@@ -1,6 +1,5 @@
-package UNO;
+package UNO.Control;
 
-import UNO.GUI.GUIBotMatch;
 import UNO.GUI.GUIStart;
 import UNO.Kartenlogik.Deck;
 

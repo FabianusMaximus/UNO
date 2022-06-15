@@ -1,10 +1,9 @@
 package UNO.GUI;
 
-import UNO.BotMatchControl;
-import util.SwingCalculation;
+import UNO.Control.BotMatchControl;
+import UNO.util.SwingCalculation;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

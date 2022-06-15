@@ -1,6 +1,6 @@
 package UNO.Kartenlogik;
 
-import UNO.Control;
+import UNO.Control.Control;
 
 import java.awt.*;
 import java.util.ArrayList;

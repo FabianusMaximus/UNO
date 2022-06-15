@@ -1,6 +1,6 @@
 package UNO.GUI;
 
-import UNO.Control;
+import UNO.Control.Control;
 import UNO.Kartenlogik.Bot;
 
 import javax.swing.*;

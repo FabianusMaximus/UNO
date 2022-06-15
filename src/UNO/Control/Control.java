@@ -1,4 +1,4 @@
-package UNO;
+package UNO.Control;
 
 import UNO.GUI.GUIGame;
 import UNO.GUI.WinScreen;
@@ -144,7 +144,7 @@ public class Control {
         }
     }
 
-    private int nextPlayer() {
+    public int nextPlayer() {
         int i = activePlayer;
         if (richtung) i++;
         else i--;

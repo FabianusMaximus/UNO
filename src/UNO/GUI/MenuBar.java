@@ -1,7 +1,6 @@
 package UNO.GUI;
 
-import UNO.Control;
-import UNO.GUIGameControl;
+import UNO.Control.GUIGameControl;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
