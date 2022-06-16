@@ -50,15 +50,6 @@ public class Bot extends Spieler {
     private void berechnenSpielzugHard() {
         //TODO Farbe wichtiger als Zahl
         //TODO verhindern dass der Gegner mehr Karten einer Farbe legen kann, eher Farbe wechseln
-        //TODO
-        //Entscheidungsvariablen
-        /*
-        farbwechselFarbeMax = 5;
-        farbwechselFarbeMin = 1;
-        nextPlayerAvoidance = 1;
-        plusTwoWhen = 3;
-        farbwechselWhen = 3;
-        */
 
         int anzSpieler = control.getAnzSpieler();
         ArrayList<Card> holdCards = this.getHand();
@@ -272,19 +263,6 @@ public class Bot extends Spieler {
             if (card.getColorValue() == color) return true;
         }
         return false;
-    }
-
-    private boolean hasStackableActionCards(ArrayList<Card> cards) {
-        //penis
-        return false;
-    }
-
-    public void updateWeights(int[] weights) {
-        farbwechselFarbeMax = weights[0];
-        farbwechselFarbeMin = weights[1];
-        nextPlayerAvoidance = weights[2];
-        plusTwoWhen = weights[3];
-        farbwechselWhen = weights[4];
     }
 
     public void reaction() {

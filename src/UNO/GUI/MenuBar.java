@@ -46,7 +46,6 @@ public class MenuBar extends JMenuBar {
             menuItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Action listener ist da");
                     guiGameControl.clickMenuItem(finalI);
                 }
             });

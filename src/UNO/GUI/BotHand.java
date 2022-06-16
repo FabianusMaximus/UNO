@@ -21,7 +21,7 @@ public class BotHand extends JFrame {
             linkedBot = (Bot) control.getSpieler(index + 1);
             this.gridLayout = new GridLayout(1, linkedBot.getAnzCards(), 2, 5);
 
-            updateAnzPanel();
+            updateAnzCards();
             designCards();
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Dieser Spieler ist nicht verbunden");
@@ -40,15 +40,25 @@ public class BotHand extends JFrame {
         this.gridLayout.setColumns(anzCards);
     }
 
-    private void soutSize() {
-        System.out.println(this.getWidth() + " " + this.getHeight());
-    }
 
-    private void updateAnzPanel() {
+    private void updateAnzCards() {
         while (cards.size() != linkedBot.getAnzCards()) {
             if (cards.size() < linkedBot.getAnzCards()) cards.add(new JPanel());
             else if (cards.size() > linkedBot.getAnzCards()) cards.remove(0);
         }
+    }
+
+    private void removeOldCards() {
+        for (JPanel card : cards) {
+            this.remove(card);
+        }
+    }
+
+    private boolean cardHasLable(JPanel card){
+        for (Component c: card.getComponents()) {
+            if (c instanceof JLabel)return true;
+        }
+        return false;
     }
 
     private void designCards() {
@@ -57,18 +67,27 @@ public class BotHand extends JFrame {
             cards.get(i).setBackground(c);
             cards.get(i).setLayout(new BorderLayout());
 
-            JLabel jl = new JLabel(linkedBot.getHand().get(i).getName());
+            JLabel jl;
+            if (cardHasLable(cards.get(i))){
+                jl = (JLabel) cards.get(i).getComponents()[0];
+                jl.setText(linkedBot.getHand().get(i).getName());
+            }else {
+                jl = new JLabel(linkedBot.getHand().get(i).getName());
+            }
             if (c != Color.yellow) jl.setForeground(Color.white);
             jl.setHorizontalAlignment(SwingConstants.CENTER);
             jl.setVerticalAlignment(SwingConstants.CENTER);
 
             cards.get(i).add(jl);
+            cards.get(i).repaint();
             this.add(cards.get(i));
         }
     }
 
     public void updateBotHand() {
         updateGrid(linkedBot.getAnzCards());
+        removeOldCards();
+        updateAnzCards();
         designCards();
         this.revalidate();
         this.repaint();
