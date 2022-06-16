@@ -5,6 +5,10 @@ import UNO.GUI.GUIGame;
 import UNO.GUI.WinScreen;
 import UNO.Kartenlogik.Card;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class GUIGameControl {
@@ -93,6 +97,19 @@ public class GUIGameControl {
 
     public void clickMenuItem(int index) {
         botHands.add(new BotHand(control, index));
+    }
+
+    /**
+     * Öffnet die Website von Uno, auf der die Spielregeln erklärt werden
+     */
+    public void clickDescription(){
+        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://github.com/FabianusMaximus/UNO"));
+            } catch (IOException | URISyntaxException e) {
+                System.out.println("URL konnte nicht aufgerufen werden");
+            }
+        }
     }
 
     public void updateBotHands() {

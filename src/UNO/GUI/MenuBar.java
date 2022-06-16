@@ -28,10 +28,7 @@ public class MenuBar extends JMenuBar {
         //a group of JMenuItems
         menuItem = new JMenuItem("Spielregeln",
                 KeyEvent.VK_T);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_1, ActionEvent.ALT_MASK));
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "This doesn't really do anything");
+        menuItem.addActionListener(e -> guiGameControl.clickDescription());
         menu.add(menuItem);
 
         //a submenu
@@ -43,12 +40,7 @@ public class MenuBar extends JMenuBar {
         for (int i = 0; i < 3; i++) {
             menuItem = new JMenuItem("Hand von Bot " + (i + 1));
             int finalI = i;
-            menuItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    guiGameControl.clickMenuItem(finalI);
-                }
-            });
+            menuItem.addActionListener(e -> guiGameControl.clickMenuItem(finalI));
             submenu.add(menuItem);
         }
 
