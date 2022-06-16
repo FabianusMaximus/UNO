@@ -2,6 +2,7 @@ package UNO.Control;
 
 import UNO.GUI.BotHand;
 import UNO.GUI.GUIGame;
+import UNO.GUI.WinScreen;
 import UNO.Kartenlogik.Card;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ public class GUIGameControl {
     private Control control;
     private GUIGame guiGame;
 
+    private WinScreen winScreen;
     private ArrayList<BotHand> botHands = new ArrayList<>();
 
     public GUIGameControl(Control control) {
@@ -75,6 +77,7 @@ public class GUIGameControl {
         control.reactionBot();
         guiGame.updateGui();
         updateBotHands();
+        if (!control.isGameActive())goToWinScreen();
     }
 
     public void clickFarbe(int index) {
@@ -97,5 +100,10 @@ public class GUIGameControl {
 
     public void updateBotHands() {
         botHands.forEach(BotHand::updateBotHand);
+    }
+
+    private void goToWinScreen(){
+        guiGame.dispose();
+        winScreen = new WinScreen(control);
     }
 }

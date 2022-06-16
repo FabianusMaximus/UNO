@@ -12,7 +12,6 @@ public class Control {
     private GUIGameControl guiGameControl;
     private GUIStartControl guiStartControl;
     private BotMatchControl bmControl;
-    private WinScreen theWinScreen;
     private Tabletop tabletop;
     private ArrayList<Spieler> spieler = new ArrayList<>();
     private boolean richtung;
@@ -232,9 +231,9 @@ public class Control {
     }
 
     public boolean isGameActive() {
-        for (Spieler value : spieler) {
-            if (value.getHand().isEmpty()) {
-                gewinner = value;
+        for (Spieler s : spieler) {
+            if (s.getHand().isEmpty()) {
+                gewinner = s;
                 return false;
             }
         }

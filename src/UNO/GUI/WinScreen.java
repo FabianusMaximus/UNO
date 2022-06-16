@@ -20,7 +20,7 @@ public class WinScreen extends JFrame implements ActionListener {
         cp.setLayout(null);
 
 
-        imgLabel = new JLabel(resizeImage(new ImageIcon("src/img/UnoCard.png"),
+        imgLabel = new JLabel(resizeImage(new ImageIcon("src/img/confetti-Hintergrund.png"),
                 500, 400));
         imgLabel.setBounds(0, 0, 500, 400);
         cp.add(imgLabel);
@@ -34,7 +34,9 @@ public class WinScreen extends JFrame implements ActionListener {
         lb_winner = new JLabel(control.getGewinner().getName() + " hat gewonnen");
         lb_winner.setForeground(Color.white);
         lb_winner.setBackground(Color.white);
-        jp_Hintergrund.add(lb_winner, BorderLayout.CENTER);
+        lb_winner.setHorizontalAlignment(SwingConstants.CENTER);
+        lb_winner.setVerticalAlignment(SwingConstants.CENTER);
+        jp_Hintergrund.add(lb_winner);
 
 
         restart = new JButton("Neues Spiel");
@@ -61,6 +63,6 @@ public class WinScreen extends JFrame implements ActionListener {
         new Control();
         dispose();
     }
-    
+
 
 }
