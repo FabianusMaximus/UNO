@@ -41,10 +41,6 @@ public class GUIGameControl {
         return control.getActivePlayer();
     }
 
-    public boolean isGameActive() {
-        return control.isGameActive();
-    }
-
     public ArrayList<String> getVerlauf() {
         return control.getVerlauf();
     }
@@ -61,6 +57,7 @@ public class GUIGameControl {
             } else {
                 guiGame.showErrorScreen("Diese Karte kann nicht gelegt werden");
             }
+            if (control.getSpieler(0).getAnzCards() == 1)guiGame.showUnoButton(true);
             guiGame.updateGui();
         }
     }
@@ -80,7 +77,7 @@ public class GUIGameControl {
         if (!control.isGameActive())goToWinScreen();
     }
 
-    public void clickFarbe(int index) {
+    public void clickColor(int index) {
         String farbe = switch (index) {
             case 0 -> "Red";
             case 1 -> "Green";
@@ -105,5 +102,9 @@ public class GUIGameControl {
     private void goToWinScreen(){
         guiGame.dispose();
         winScreen = new WinScreen(control);
+    }
+
+    public void sayUno(){
+        control.getSpieler(0).setUno(true);
     }
 }

@@ -36,7 +36,7 @@ public class ColorSelectionScreen extends JFrame {
             btn_Farben[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    guiGameControl.clickFarbe(finalI);
+                    guiGameControl.clickColor(finalI);
                 }
             });
         }

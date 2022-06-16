@@ -2,6 +2,7 @@ package UNO.GUI;
 
 import UNO.Components.CardButton;
 import UNO.Control.GUIGameControl;
+import UNO.util.SwingCalculation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +35,7 @@ public class GUIGame extends JFrame {
         guiGameControl = pControl;
         jl_CardsOtherPlayer = new JLabel[guiGameControl.getAnzSpieler()];
         setTitle("UNO - Gamescreen");
-        setSize(1000, 563);
+        setSize(1000, 620);
         Container cp = getContentPane();
         cp.setLayout(new BorderLayout());
 
@@ -46,12 +47,7 @@ public class GUIGame extends JFrame {
 
         btn_Stapel = new JButton("Aufn. Stapel");
         btn_Stapel.setBounds(390, 20, 100, 150);
-        btn_Stapel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                guiGameControl.clickStapel();
-            }
-        });
+        btn_Stapel.addActionListener(e -> guiGameControl.clickStapel());
         basePanel.add(btn_Stapel);
 
         cardOnTablePanel = new JPanel();
@@ -96,17 +92,16 @@ public class GUIGame extends JFrame {
         if (guiGameControl.getActivePlayer() == 0) {
             btn_Next.setVisible(false);
         }
-        btn_Next.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                guiGameControl.clickNext();
-            }
-        });
+        btn_Next.addActionListener(e -> guiGameControl.clickNext());
         playersPanel.add(btn_Next);
 
         btn_Uno = new JButton("UNO");
         btn_Uno.setBounds(10, 50, 100, 50);
         btn_Uno.setVisible(false);
+        btn_Uno.addActionListener(e -> {
+            guiGameControl.sayUno();
+            btn_Uno.setVisible(false);
+        });
         basePanel.add(btn_Uno);
 
         cardsOnHandPanel = new JPanel();
@@ -119,7 +114,7 @@ public class GUIGame extends JFrame {
 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(false);
+        setResizable(true);
         setVisible(true);
     }
 
@@ -140,12 +135,7 @@ public class GUIGame extends JFrame {
         for (ActionListener a : btn_Cards.get(index).getActionListeners()) {
             btn_Cards.get(index).removeActionListener(a);
         }
-        btn_Cards.get(index).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                guiGameControl.clickCard(btn_Cards.get(index).getLinkedCard(), index);
-            }
-        });
+        btn_Cards.get(index).addActionListener(e -> guiGameControl.clickCard(btn_Cards.get(index).getLinkedCard(), index));
 
     }
 
@@ -158,6 +148,7 @@ public class GUIGame extends JFrame {
     private void designCOT() {
         cardOnTable.setText(guiGameControl.getCardOnTable().getName());
         cardOnTable.setForeground(Color.white);
+        cardOnTable.setFont(new Font("Arial", Font.BOLD, 15));
         switch (guiGameControl.getCardOnTable().getColorValue()) {
             case 0 -> cardOnTablePanel.setBackground(Color.red);
             case 1 -> cardOnTablePanel.setBackground(Color.green);
@@ -204,10 +195,6 @@ public class GUIGame extends JFrame {
         this.repaint();
     }
 
-    private boolean isGameActive() {
-        return guiGameControl.isGameActive();
-    }
-
     private void setVerlauf() {
         StringBuilder hold = new StringBuilder("--------------------Verlauf--------------------" + "\n");
         for (int i = 0; i < guiGameControl.getVerlauf().size(); i++) {
@@ -231,6 +218,10 @@ public class GUIGame extends JFrame {
 
     public void showErrorScreen(String message) {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void showUnoButton(boolean visible) {
+        btn_Uno.setVisible(visible);
     }
 
 

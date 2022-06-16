@@ -41,6 +41,7 @@ public class CardButton extends JButton {
     public void designButton() {
         this.setText(linkedCard.getName());
         this.setForeground(Color.white);
+        this.setFont(new Font("Arial", Font.BOLD, 15));
 
         switch (linkedCard.getColorValue()) {
             case 0 -> setBackground(Color.red);

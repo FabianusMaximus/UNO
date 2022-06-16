@@ -4,6 +4,18 @@ import java.awt.*;
 
 public class SwingCalculation {
 
+    public static Dimension getScreenSize() {
+        return Toolkit.getDefaultToolkit().getScreenSize();
+    }
+
+    public static int getScreenWidth() {
+        return (int) getScreenSize().getWidth();
+    }
+
+    public static int getScreenHeight() {
+        return (int) getScreenSize().getHeight();
+    }
+
     public static int centerX(Component comp1, Component comp2) {
         return comp1.getWidth() / 2 - comp2.getWidth() / 2;
     }
