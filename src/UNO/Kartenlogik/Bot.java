@@ -91,6 +91,7 @@ public class Bot extends Spieler {
                     control.setAusgwCard(selectCard(validCards, 13));
                 }
             }
+            //Legt eher Aktionskarten ab
             if (hasActionCards) control.setAusgwCard(selectComboCard(validCards));
             //Schaut, ob er Karten hat die sich zusammen ablegen lassen
             if (hasComboCards(validCards)) control.setAusgwCard(selectComboCard(validCards));
@@ -99,14 +100,17 @@ public class Bot extends Spieler {
         } else spielen = false;
 
         bestColor = getIndexHighestNumber(anzColor);
-
-        //TODO versucht die Aktionskarten zusammen abzulegen
     }
 
     public boolean kannSpielen() {
         return spielen;
     }
 
+    /**
+     * Wählt, je nach Schwierigkeit der Bots, die Farbe aus zu der gewechselt werden soll
+     *
+     * @return Sting der Farbe zu der gewechselt werden soll
+     */
     public String auswaehlenFarbe() {
         String[] farbe = {"red", "green", "blue", "yellow"};
         String ausgfarbe = "";
