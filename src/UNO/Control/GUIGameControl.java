@@ -5,6 +5,7 @@ import UNO.GUI.GUIGame;
 import UNO.GUI.WinScreen;
 import UNO.Kartenlogik.Card;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
@@ -61,7 +62,7 @@ public class GUIGameControl {
             } else {
                 guiGame.showErrorScreen("Diese Karte kann nicht gelegt werden");
             }
-            if (control.getSpieler(0).getAnzCards() == 1)guiGame.showUnoButton(true);
+            guiGame.showUnoButton(control.getSpieler(0).getAnzCards() == 1);
             guiGame.updateGui();
         }
     }
@@ -75,10 +76,17 @@ public class GUIGameControl {
     }
 
     public void clickNext() {
+        if (mussUnoSagen() && !control.getSpieler(0).hatUnoGesagt()) {
+            for (int i = 0; i < 4; i++) {
+                control.aufnehmenKarte(0);
+            }
+            guiGame.showErrorScreen("Du hast vergessen UNO zu sagen");
+        }
+        control.getSpieler(0).setUno(false);
         control.reactionBot();
         guiGame.updateGui();
         updateBotHands();
-        if (!control.isGameActive())goToWinScreen();
+        if (!control.isGameActive()) goToWinScreen();
     }
 
     public void clickColor(int index) {
@@ -102,7 +110,7 @@ public class GUIGameControl {
     /**
      * Öffnet die Website von Uno, auf der die Spielregeln erklärt werden
      */
-    public void clickDescription(){
+    public void clickDescription() {
         if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
             try {
                 Desktop.getDesktop().browse(new URI("https://github.com/FabianusMaximus/UNO"));
@@ -116,12 +124,16 @@ public class GUIGameControl {
         botHands.forEach(BotHand::updateBotHand);
     }
 
-    private void goToWinScreen(){
+    private void goToWinScreen() {
         guiGame.dispose();
         winScreen = new WinScreen(control);
     }
 
-    public void sayUno(){
+    public void sayUno() {
         control.getSpieler(0).setUno(true);
+    }
+
+    private boolean mussUnoSagen() {
+        return control.getSpieler(0).getAnzCards() == 1;
     }
 }

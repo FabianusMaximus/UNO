@@ -49,6 +49,10 @@ public class Spieler {
         return uno;
     }
 
+    public void flipUno() {
+        uno = !uno;
+    }
+
     public void sortieren() {
         Card temp;
         boolean sorted = false;
