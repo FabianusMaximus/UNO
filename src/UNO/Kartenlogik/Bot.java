@@ -9,8 +9,7 @@ import java.util.ArrayList;
 public class Bot extends Spieler {
     private Control control;
     private boolean spielen;
-    private int difficulty, bestColor, rundenGewonnen, farbwechselFarbeMax, farbwechselFarbeMin, nextPlayerAvoidance,
-            plusTwoWhen, farbwechselWhen;
+    private int difficulty, bestColor, rundenGewonnen;
 
     public Bot(int nummer, Control pControl, int pDifficulty) {
         super(nummer);
@@ -25,7 +24,8 @@ public class Bot extends Spieler {
         ArrayList<Card> holdCards = this.getHand();
         ArrayList<Card> validCards = selectValidCards(holdCards);
         if (validCards.size() != 0) {
-            control.setAusgwCard(validCards.get(0));
+            int random = ((int) (Math.random() * validCards.size()));
+            control.setAusgwCard(validCards.get(random));
             spielen = true;
         } else spielen = false;
     }
@@ -39,8 +39,7 @@ public class Bot extends Spieler {
         ArrayList<Card> validCards = selectValidCards(holdCards);
         int[] anzColor = countAnzColors(holdCards);
         if (validCards.size() != 0) {
-            int random = ((int) (Math.random() * validCards.size()));
-            control.setAusgwCard(validCards.get(random));
+            control.setAusgwCard(validCards.get(0));
             spielen = true;
         } else spielen = false;
 
@@ -51,9 +50,7 @@ public class Bot extends Spieler {
         //TODO Farbe wichtiger als Zahl
         //TODO verhindern dass der Gegner mehr Karten einer Farbe legen kann, eher Farbe wechseln
 
-        int anzSpieler = control.getAnzSpieler();
         ArrayList<Card> holdCards = this.getHand();
-        int anzKarten = holdCards.size();
         ArrayList<Card> validCards = selectValidCards(holdCards);
         int[] anzColor = countAnzColors(holdCards);
         int[] anzActionCards = countAnzActionCards(holdCards);
@@ -61,6 +58,7 @@ public class Bot extends Spieler {
         boolean hasPlusFour = hasCard(holdCards, 14);
         boolean hasPlusTwo = hasCard(validCards, 10);
         boolean hasAvoidingCard = hasCard(validCards, 11) || hasCard(validCards, 12);
+        boolean hasActionCards = hasActionCards(validCards);
 
         if (validCards.size() != 0) {
             //wenn ihm nichts Besseres einfällt, macht er den erst besten Zug
@@ -70,29 +68,32 @@ public class Bot extends Spieler {
                 control.setAusgwCard(selectCard(validCards, control.getCardOnTable().getColorObjekt()));
             }
             //Legt keine Farbwechselkarte, wenn er weniger als 4 aber mehr als eine Karte auf der Hand hat (Bitch-Finish)
-            if (holdCards.size() <= farbwechselFarbeMax && holdCards.size() > farbwechselFarbeMin) {
+            if (holdCards.size() <= 4 && holdCards.size() > 1) {
                 removeCardFromList(validCards, 13);
                 removeCardFromList(validCards, 14);
                 hasSwap = false;
                 hasPlusFour = false;
             }
             //Wenn der nachfolgende Spieler nur noch eine Karte wird versucht dessen Zug zu vermeiden
-            if (hasAvoidingCard && control.getNextPlayer().getAnzCards() == nextPlayerAvoidance) {
+            if (hasAvoidingCard && control.getNextPlayer().getAnzCards() == 1) {
                 if (hasCard(validCards, 11)) control.setAusgwCard(selectCard(validCards, 11));
                 else control.setAusgwCard(selectCard(validCards, 12));
             }
             //Schaut, ob der nächste Spieler weniger als 3 Karten hat und ob er eine +2 legen kann
-            if (hasPlusTwo && control.getNextPlayer().getAnzCards() > plusTwoWhen) {
+            if (hasPlusTwo && control.getNextPlayer().getAnzCards() >= 3) {
                 control.setAusgwCard(selectCard(validCards, 10));
             }
             //Schaut, ob er mehr als 4 Karten einer Farbe hat und überlegt sich dann, ob er wechseln soll
             if (hasMoreThan4OfOneColor(anzColor)) {
-                if (hasPlusFour && control.getNextPlayer().getAnzCards() > farbwechselWhen) {
+                if (hasPlusFour && control.getNextPlayer().getAnzCards() >= 4) {
                     control.setAusgwCard(selectCard(validCards, 14));
                 } else if (hasSwap) {
                     control.setAusgwCard(selectCard(validCards, 13));
                 }
             }
+            if (hasActionCards) control.setAusgwCard(selectComboCard(validCards));
+            //Schaut, ob er Karten hat die sich zusammen ablegen lassen
+            if (hasComboCards(validCards)) control.setAusgwCard(selectComboCard(validCards));
 
             spielen = true;
         } else spielen = false;
@@ -110,8 +111,8 @@ public class Bot extends Spieler {
         String[] farbe = {"red", "green", "blue", "yellow"};
         String ausgfarbe = "";
         return switch (difficulty) {
-            case 0 -> ausgfarbe = farbe[((int) (Math.random() * 4))];
-            case 1, 2 -> ausgfarbe = farbe[bestColor];
+            case 0 -> farbe[((int) (Math.random() * 4))];
+            case 1, 2 -> farbe[bestColor];
             default -> ausgfarbe;
         };
     }
@@ -258,6 +259,46 @@ public class Bot extends Spieler {
         return null;
     }
 
+    /**
+     * Es gibt karten die sich in einer 1 gegen 1 Situation zusammen ablegen lassen
+     *
+     * @return Ob er Karten hat, die man zusammen ablegen kann
+     */
+    private boolean hasComboCards(ArrayList<Card> validCards) {
+        int anzPlusTwo = 0;
+        int anzReverse = 0;
+        int anzBlock = 0;
+        if (control.getAnzSpieler() == 2) {
+            for (Card card : validCards) {
+                switch (card.getValue()) {
+                    case 10 -> anzPlusTwo++;
+                    case 11 -> anzReverse++;
+                    case 12 -> anzBlock++;
+                }
+            }
+        }
+        return anzPlusTwo > 1 || anzReverse > 1 || anzBlock > 1;
+    }
+
+    private boolean hasActionCards(ArrayList<Card> validCards) {
+        int anz = 0;
+        for (Card card : validCards) {
+            switch (card.getValue()) {
+                case 10, 11, 12 -> anz++;
+            }
+        }
+        return anz > 0;
+    }
+
+    private Card selectComboCard(ArrayList<Card> validCards) {
+        for (Card card : validCards) {
+            if (card.getValue() >= 10 && card.getValue() <= 12) return card;
+        }
+        System.out.println("Kombo-karte konnte nicht gefunden werden");
+        return null;
+
+    }
+
     private boolean hasColor(ArrayList<Card> cards, int color) {
         for (Card card : cards) {
             if (card.getColorValue() == color) return true;
@@ -283,25 +324,5 @@ public class Bot extends Spieler {
 
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
-    }
-
-    public int getFarbwechselFarbeMax() {
-        return farbwechselFarbeMax;
-    }
-
-    public int getFarbwechselFarbeMin() {
-        return farbwechselFarbeMin;
-    }
-
-    public int getNextPlayerAvoidance() {
-        return nextPlayerAvoidance;
-    }
-
-    public int getPlusTwoWhen() {
-        return plusTwoWhen;
-    }
-
-    public int getFarbwechselWhen() {
-        return farbwechselWhen;
     }
 }

@@ -106,7 +106,7 @@ public class Control {
     }
 
     public void addToVerlauf(Card pCard, int pSpieler) {
-        verlauf.add(spieler.get(pSpieler).getName() + ": " + pCard.getName() + "\n");
+        verlauf.add(spieler.get(pSpieler).getName() + ": " + "\t" + pCard.getColor() + " " + pCard.getName() + "\n");
         if (verlauf.size() > 5) {
             verlauf.remove(0);
         }
