@@ -80,6 +80,7 @@ public class GUIGameControl {
             for (int i = 0; i < 4; i++) {
                 control.aufnehmenKarte(0);
             }
+            guiGame.showUnoButton(false);
             guiGame.showErrorScreen("Du hast vergessen UNO zu sagen");
         }
         control.getSpieler(0).setUno(false);
